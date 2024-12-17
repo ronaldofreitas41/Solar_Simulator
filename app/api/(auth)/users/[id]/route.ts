@@ -1,9 +1,18 @@
 import { NextResponse } from "next/server";
 
 export const DELETE = (request: Request) => {
-    return 0;
+    try {
+        
+        return NextResponse.json({messsage:'Registro deletado!'},{status:200})
+    } catch (error:any) {
+        return NextResponse.json({message:'Internal Server Error'},{status:500});
+    }
 }
 
 export async function PUT(request: Request) {
-    return new NextResponse("This is my first Api response");
+    try {
+        return NextResponse.json({message:'ok'},{status:200})
+    } catch (error:any) {
+        return NextResponse.json({message:'ok'},{status:200})
+    }
 }

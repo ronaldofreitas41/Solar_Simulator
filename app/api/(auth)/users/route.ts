@@ -1,8 +1,9 @@
-import { database } from "@/app/services/fbConfig";
+import { database } from "@/app/services/firebaseClient";
 import { child, get, push, ref, set } from "firebase/database";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
+
     try {
         const dbRef = ref(database);
         const snapshot = await get(child(dbRef, 'Users'));
@@ -16,12 +17,9 @@ export async function GET(request: Request) {
         console.error('Error fetching data:', error.message);
         return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
     }
-
 }
 
-
-
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
     try {
         const data = await request.json();
         const userRef = push(ref(database, 'Users'));
@@ -30,11 +28,8 @@ export async function POST(request: Request) {
 
         console.log('Data saved successfully!');
         return NextResponse.json({ message: 'Data saved successfully!' }, { status: 200 });
-    } catch (error: any) {
+    } catch (error:any) {
         console.error('Error saving data:', error.message);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
-
-
-
