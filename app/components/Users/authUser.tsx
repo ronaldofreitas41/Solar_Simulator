@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { database, auth } from "../../services/firebaseClient";  // Importação do banco de dados
 import BlueButton from "../Common/blueButton";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { redirect } from "next/navigation";
 
 export const AuthUser = () => {
 
@@ -14,11 +15,8 @@ export const AuthUser = () => {
     async function submit() {
         try {
             // Envio dos dados ao servidor para verificação
-            const res = await fetch('http://localhost:3000/api/checkUsers', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/checkUsers'`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
                 body: JSON.stringify({ 
                     "email": email,
                     "password": password 
@@ -29,7 +27,7 @@ export const AuthUser = () => {
                 const data = await res.json();
                 localStorage.setItem('UserData', JSON.stringify(data));
                 alert('Usuário autenticado como correto')
-                window.location.href = 'http://localhost:3000/'
+                redirect('http://localhost:3000/');
             } else {
                 throw new Error('Usuário não está presente na base de dados');
             }

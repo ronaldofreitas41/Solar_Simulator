@@ -13,11 +13,8 @@ export const AddUser = () => {
   const [userType, setUserType] = useState("");
 
   async function save() {
-    const res = await fetch("http://localhost:3000/api/users", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/users`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify({
         name: name,
         email: email,
@@ -133,7 +130,7 @@ export const AddUser = () => {
               fontFamily: "serif",
             }}
           >
-            Registre-se
+            Login
           </a>
           <form
             style={{
