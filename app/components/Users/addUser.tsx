@@ -4,53 +4,62 @@ import React, { useState } from "react";
 import BlueButton from "../Common/blueButton";
 import { User } from "@/types";
 
-// console.log("Database:", database);
-
 export const AddUser = () => {
-
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [cpf, setCPF] = useState('');
     const [consumidor, setConsumidor] = useState(0);
     const [fornecedor, setFornecedor] = useState(0);
-    let userType: string;
-    function save() {
+    const [userType, setUserType] = useState('');
 
-        const onSubmit = async (userdata: User) => {
+    async function save() {
+        try {
+            console.log('Dados do usuário:', { name, email, password, cpf, userType });
+
             const res = await fetch('http://localhost:3000/api/users', {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    user_name: name,
-                    user_email: email,
-                    user_cpf: cpf,
-                    user_password: password,
-                    user_type: userType
+                    "name": name,
+                    "email": email,
+                    "cpf": cpf,
+                    "password": password,
+                    "type": userType
                 })
             });
 
             if (res.ok) {
-                const data = await res.json();
-                console.log('User added successfully:', data);
+                const text = await res.text(); // Obtemos a resposta como texto
+                try {
+                    const data = JSON.parse(text); // Tentamos converter para JSON
+                    console.log('Resposta recebida:', data);
+                    alert("Usuário cadastrado corretamente!");
+                } catch (err) {
+                    console.error('Resposta não é um JSON válido:', text);
+                    alert("Usuário cadastrado, mas resposta inválida!");
+                }
             } else {
+                alert("Erro no cadastro de usuário");
                 console.error('Error adding user:', res.statusText);
             }
-        };
-
+        } catch (error: any) {
+            console.error('Erro ao cadastrar usuário:', error.message);
+            alert("Erro ao cadastrar usuário: " + error.message);
+        }
     }
 
     function handleRoleChange(role: string) {
         if (role === 'consumidor') {
             setConsumidor(1);
             setFornecedor(0);
-            userType = 'Consumidor';
+            setUserType('Consumidor');
         } else {
             setConsumidor(0);
             setFornecedor(1);
-            userType = 'Fornecedor'
+            setUserType('Fornecedor');
         }
     }
 
@@ -157,6 +166,7 @@ export const AddUser = () => {
                         <input
                             type="text"
                             placeholder="CPF"
+                            maxLength={11}
                             style={{
                                 padding: "10px",
                                 marginBottom: "10px",
