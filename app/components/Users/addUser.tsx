@@ -1,241 +1,233 @@
-'use client';
+"use client";
 
 import React, { useState } from "react";
 import BlueButton from "../Common/blueButton";
-import { User } from "@/types";
 
 export const AddUser = () => {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [cpf, setCPF] = useState('');
-    const [consumidor, setConsumidor] = useState(0);
-    const [fornecedor, setFornecedor] = useState(0);
-    const [userType, setUserType] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [cpf, setCPF] = useState("");
+  const [consumidor, setConsumidor] = useState(0);
+  const [fornecedor, setFornecedor] = useState(0);
+  const [userType, setUserType] = useState("");
 
-    async function save() {
-        try {
-            console.log('Dados do usuário:', { name, email, password, cpf, userType });
+  async function save() {
+    const res = await fetch("http://localhost:3000/api/users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: name,
+        email: email,
+        cpf: cpf,
+        password: password,
+        type: userType,
+      }),
+    });
 
-            const res = await fetch('http://localhost:3000/api/users', {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "name": name,
-                    "email": email,
-                    "cpf": cpf,
-                    "password": password,
-                    "type": userType
-                })
-            });
-
-            if (res.ok) {
-                const text = await res.text(); // Obtemos a resposta como texto
-                try {
-                    const data = JSON.parse(text); // Tentamos converter para JSON
-                    console.log('Resposta recebida:', data);
-                    alert("Usuário cadastrado corretamente!");
-                } catch (err) {
-                    console.error('Resposta não é um JSON válido:', text);
-                    alert("Usuário cadastrado, mas resposta inválida!");
-                }
-            } else {
-                alert("Erro no cadastro de usuário");
-                console.error('Error adding user:', res.statusText);
-            }
-        } catch (error: any) {
-            console.error('Erro ao cadastrar usuário:', error.message);
-            alert("Erro ao cadastrar usuário: " + error.message);
-        }
+    if (res.ok) {
+        alert("Usuário cadastrado com sucesso");
+    } else {
+      alert("Erro no cadastro de usuário");
     }
+  }
 
-    function handleRoleChange(role: string) {
-        if (role === 'consumidor') {
-            setConsumidor(1);
-            setFornecedor(0);
-            setUserType('Consumidor');
-        } else {
-            setConsumidor(0);
-            setFornecedor(1);
-            setUserType('Fornecedor');
-        }
+  function handleRoleChange(role: string) {
+    if (role === "consumidor") {
+      setConsumidor(1);
+      setFornecedor(0);
+      setUserType("Consumidor");
+    } else {
+      setConsumidor(0);
+      setFornecedor(1);
+      setUserType("Fornecedor");
     }
+  }
 
-    return (
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        background: "#F4F4F4", // Cor de fundo da página
+      }}
+    >
+      {/* Container Principal */}
+      <div
+        style={{
+          display: "flex",
+          width: "80%",
+          maxWidth: "900px",
+          height: "80%",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+          borderRadius: "8px",
+          overflow: "hidden",
+        }}
+      >
+        {/* Lado esquerdo (Azul) */}
         <div
-            style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100vh",
-                background: "#F4F4F4", // Cor de fundo da página
-            }}
+          style={{
+            display: "flex",
+            flex: 1,
+            background: "#004C80",
+            justifyContent: "center",
+            alignItems: "center",
+            color: "#FFF",
+            flexDirection: "column",
+            padding: "20px",
+          }}
         >
-            {/* Container Principal */}
-            <div
-                style={{
-                    display: "flex",
-                    width: "80%",
-                    maxWidth: "900px",
-                    height: "80%",
-                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                    borderRadius: "8px",
-                    overflow: "hidden",
-                }}
-            >
-                {/* Lado esquerdo (Azul) */}
-                <div
-                    style={{
-                        display: "flex",
-                        flex: 1,
-                        background: "#004C80",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        color: "#FFF",
-                        flexDirection: "column",
-                        padding: "20px",
-                    }}
-                >
-                    <img src="/images/logo.png" alt="Logo" />
-                    <h2 style={{ marginTop: "20px", textAlign: "center" }}>Criar uma conta</h2>
-                    <button
-                        style={{
-                            background: "#FFFFFF",
-                            color: "#004C80",
-                            border: "none",
-                            padding: "10px 20px",
-                            borderRadius: "4px",
-                            cursor: "pointer",
-                            marginTop: "10px",
-                        }}
-                    >
-                        <a style={{ fontFamily: "monospace" }}>Registre-se</a>
-                    </button>
-                    <p style={{ marginTop: "10px" }}>Já tem uma conta?</p>
-                    <button
-                        style={{
-                            background: "transparent",
-                            color: "#FFFFFF",
-                            border: "1px solid #FFFFFF",
-                            padding: "10px 20px",
-                            borderRadius: "4px",
-                            cursor: "pointer",
-                        }}
-                    >
-                        Entrar
-                    </button>
-                </div>
-
-                {/* Lado direito (Formulário) */}
-                <div
-                    style={{
-                        display: "flex",
-                        flex: 1,
-                        background: "#FFFFFF",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        flexDirection: "column",
-                        padding: "20px",
-                    }}
-                >
-                    <a style={{ marginBottom: "20px", color: "#004C80", fontSize: 35, fontFamily: "serif" }}>
-                        Registre-se
-                    </a>
-                    <form
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            width: "100%",
-                            maxWidth: "300px",
-                        }}
-                    >
-                        <input
-                            type="text"
-                            placeholder="Nome"
-                            style={{
-                                padding: "10px",
-                                marginBottom: "10px",
-                                border: "1px solid #CCC",
-                                borderRadius: "4px",
-                                color: '#000'
-                            }}
-                            onChange={event => setName(event.target.value)}
-                        />
-                        <input
-                            type="text"
-                            placeholder="CPF"
-                            maxLength={11}
-                            style={{
-                                padding: "10px",
-                                marginBottom: "10px",
-                                border: "1px solid #CCC",
-                                borderRadius: "4px",
-                                color: '#000'
-                            }}
-                            onChange={event => setCPF(event.target.value)}
-                        />
-                        <input
-                            type="text"
-                            placeholder="E-mail"
-                            style={{
-                                padding: "10px",
-                                marginBottom: "10px",
-                                border: "1px solid #CCC",
-                                borderRadius: "4px",
-                                color: '#000'
-                            }}
-                            onChange={event => setEmail(event.target.value)}
-                        />
-                        <input
-                            type="password"
-                            placeholder="Senha"
-                            style={{
-                                padding: "10px",
-                                marginBottom: "10px",
-                                border: "1px solid #CCC",
-                                borderRadius: "4px",
-                                color: '#000'
-                            }}
-                            onChange={event => setPassword(event.target.value)}
-                        />
-                        <div
-                            style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                marginBottom: "20px",
-                            }}
-                        >
-                            <label style={{ color: '#000' }}>
-                                <input
-                                    type="radio"
-                                    id="Consumidor"
-                                    name="role"
-                                    value="consumidor"
-                                    checked={consumidor === 1}
-                                    onChange={() => handleRoleChange('consumidor')}
-                                />{" "}
-                                Consumidor
-                            </label>
-                            <label style={{ color: '#000' }}>
-                                <input
-                                    type="radio"
-                                    id="Fornecedor"
-                                    name="role"
-                                    value="fornecedor"
-                                    checked={fornecedor === 1}
-                                    onChange={() => handleRoleChange('fornecedor')}
-                                />{" "}
-                                Fornecedor
-                            </label>
-                        </div>
-                        <BlueButton text="Salvar" onClick={save} />
-                    </form>
-                </div>
-            </div>
+          <img src="/images/logo.png" alt="Logo" />
+          <h2 style={{ marginTop: "20px", textAlign: "center" }}>
+            Criar uma conta
+          </h2>
+          <button
+            style={{
+              background: "#FFFFFF",
+              color: "#004C80",
+              border: "none",
+              padding: "10px 20px",
+              borderRadius: "4px",
+              cursor: "pointer",
+              marginTop: "10px",
+            }}
+          >
+            <a style={{ fontFamily: "monospace" }}>Registre-se</a>
+          </button>
+          <p style={{ marginTop: "10px" }}>Já tem uma conta?</p>
+          <button
+            style={{
+              background: "transparent",
+              color: "#FFFFFF",
+              border: "1px solid #FFFFFF",
+              padding: "10px 20px",
+              borderRadius: "4px",
+              cursor: "pointer",
+            }}
+          >
+            Entrar
+          </button>
         </div>
-    );
+
+        {/* Lado direito (Formulário) */}
+        <div
+          style={{
+            display: "flex",
+            flex: 1,
+            background: "#FFFFFF",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+            padding: "20px",
+          }}
+        >
+          <a
+            style={{
+              marginBottom: "20px",
+              color: "#004C80",
+              fontSize: 35,
+              fontFamily: "serif",
+            }}
+          >
+            Registre-se
+          </a>
+          <form
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              width: "100%",
+              maxWidth: "300px",
+            }}
+          >
+            <input
+              type="text"
+              placeholder="Nome"
+              style={{
+                padding: "10px",
+                marginBottom: "10px",
+                border: "1px solid #CCC",
+                borderRadius: "4px",
+                color: "#000",
+              }}
+              onChange={(event) => setName(event.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="CPF"
+              maxLength={11}
+              style={{
+                padding: "10px",
+                marginBottom: "10px",
+                border: "1px solid #CCC",
+                borderRadius: "4px",
+                color: "#000",
+              }}
+              onChange={(event) => setCPF(event.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="E-mail"
+              style={{
+                padding: "10px",
+                marginBottom: "10px",
+                border: "1px solid #CCC",
+                borderRadius: "4px",
+                color: "#000",
+              }}
+              onChange={(event) => setEmail(event.target.value)}
+            />
+            <input
+              type="password"
+              placeholder="Senha"
+              style={{
+                padding: "10px",
+                marginBottom: "10px",
+                border: "1px solid #CCC",
+                borderRadius: "4px",
+                color: "#000",
+              }}
+              onChange={(event) => setPassword(event.target.value)}
+            />
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginBottom: "20px",
+              }}
+            >
+              <label style={{ color: "#000" }}>
+                <input
+                  type="radio"
+                  id="Consumidor"
+                  name="role"
+                  value="consumidor"
+                  checked={consumidor === 1}
+                  onChange={() => handleRoleChange("consumidor")}
+                />{" "}
+                Consumidor
+              </label>
+              <label style={{ color: "#000" }}>
+                <input
+                  type="radio"
+                  id="Fornecedor"
+                  name="role"
+                  value="fornecedor"
+                  checked={fornecedor === 1}
+                  onChange={() => handleRoleChange("fornecedor")}
+                />{" "}
+                Fornecedor
+              </label>
+            </div>
+            <BlueButton text="Salvar" onClick={save} />
+          </form>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default AddUser;
