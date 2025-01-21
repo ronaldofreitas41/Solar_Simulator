@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import BlueButton from "../Common/blueButton";
+import WhiteButton from "../Common/whiteButton";
+import { redirect } from "next/navigation";
 
 export const AddUser = () => {
   const [name, setName] = useState("");
@@ -13,7 +15,7 @@ export const AddUser = () => {
   const [userType, setUserType] = useState("");
 
   async function save() {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/users`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/users`, {
       method: "POST",
       body: JSON.stringify({
         name: name,
@@ -25,7 +27,8 @@ export const AddUser = () => {
     });
 
     if (res.ok) {
-        alert("Usuário cadastrado com sucesso");
+      alert("Usuário cadastrado com sucesso");
+      redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/login`);
     } else {
       alert("Erro no cadastro de usuário");
     }
@@ -43,6 +46,13 @@ export const AddUser = () => {
     }
   }
 
+  function mudaRegister() {
+    redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/register`);
+  }
+
+  function mudaLogin() {
+    redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/login`);
+  }
   return (
     <div
       style={{
@@ -82,32 +92,10 @@ export const AddUser = () => {
           <h2 style={{ marginTop: "20px", textAlign: "center" }}>
             Criar uma conta
           </h2>
-          <button
-            style={{
-              background: "#FFFFFF",
-              color: "#004C80",
-              border: "none",
-              padding: "10px 20px",
-              borderRadius: "4px",
-              cursor: "pointer",
-              marginTop: "10px",
-            }}
-          >
-            <a style={{ fontFamily: "monospace" }}>Registre-se</a>
-          </button>
+          <WhiteButton text="Registre-se" onClick={mudaRegister} />
           <p style={{ marginTop: "10px" }}>Já tem uma conta?</p>
-          <button
-            style={{
-              background: "transparent",
-              color: "#FFFFFF",
-              border: "1px solid #FFFFFF",
-              padding: "10px 20px",
-              borderRadius: "4px",
-              cursor: "pointer",
-            }}
-          >
-            Entrar
-          </button>
+
+          <BlueButton text="Entrar" onClick={mudaLogin} />
         </div>
 
         {/* Lado direito (Formulário) */}
@@ -130,7 +118,7 @@ export const AddUser = () => {
               fontFamily: "serif",
             }}
           >
-            Login
+            Registro de Usuário
           </a>
           <form
             style={{

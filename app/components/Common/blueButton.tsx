@@ -13,7 +13,7 @@ export const BlueButton: React.FC<Props> = ({ text, onClick }) => {
                 color: "#FFF",
                 padding: "10px",
                 borderRadius: "4px",
-                border: "none",
+                border: "1px solid #FFF",
                 cursor: "pointer",
             }}
             onClick={onClick}

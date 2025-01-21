@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState } from "react";
-import { database, auth } from "../../services/firebaseClient";  // Importação do banco de dados
-import BlueButton from "../Common/blueButton";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../services/firebaseClient";  // Importação do banco de dados
 import { redirect } from "next/navigation";
+import BlueButton from "../Common/blueButton";
+import WhiteButton from "../Common/whiteButton";
 
 export const AuthUser = () => {
 
@@ -13,27 +13,31 @@ export const AuthUser = () => {
     const authenticator = auth;
 
     async function submit() {
-        try {
-            // Envio dos dados ao servidor para verificação
-            const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/checkUsers'`, {
-                method: 'POST',
-                body: JSON.stringify({ 
-                    "email": email,
-                    "password": password 
-                })
-            });
+        // Envio dos dados ao servidor para verificação
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/checkUsers'`, {
+            method: 'POST',
+            body: JSON.stringify({
+                "email": email,
+                "password": password
+            })
+        });
 
-            if (res.ok) {
-                const data = await res.json();
-                localStorage.setItem('UserData', JSON.stringify(data));
-                alert('Usuário autenticado como correto')
-                redirect('http://localhost:3000/');
-            } else {
-                throw new Error('Usuário não está presente na base de dados');
-            }
-        } catch (error: any) {
-            alert(error);
+        if (res.ok) {
+            const data = await res.json();
+            localStorage.setItem('UserData', JSON.stringify(data));
+            alert('Usuário autenticado como correto')
+            redirect(`${process.env.NEXT_PUBLIC_BASE_URL}`);
+        } else {
+            throw new Error('Usuário não está presente na base de dados');
         }
+    }
+
+    function mudaRegister() {
+        redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/register`);
+    }
+
+    function mudaLogin() {
+        redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/login`);
     }
 
     return (
@@ -73,32 +77,9 @@ export const AuthUser = () => {
                 >
                     <img src="/images/logo.png" alt="Logo" />
                     <h2 style={{ marginTop: "20px", textAlign: "center" }}>Criar uma conta</h2>
-                    <button
-                        style={{
-                            background: "#FFFFFF",
-                            color: "#004C80",
-                            border: "none",
-                            padding: "10px 20px",
-                            borderRadius: "4px",
-                            cursor: "pointer",
-                            marginTop: "10px",
-                        }}
-                    >
-                        <a style={{ fontFamily: "monospace" }}>Registre-se</a>
-                    </button>
+                    <WhiteButton text="Registre-se" onClick={mudaRegister} />
                     <p style={{ marginTop: "10px" }}>Já tem uma conta?</p>
-                    <button
-                        style={{
-                            background: "transparent",
-                            color: "#FFFFFF",
-                            border: "1px solid #FFFFFF",
-                            padding: "10px 20px",
-                            borderRadius: "4px",
-                            cursor: "pointer",
-                        }}
-                    >
-                        Entrar
-                    </button>
+                    <BlueButton text="Entrar" onClick={mudaLogin} />
                 </div>
 
                 {/* Lado direito (Formulário) */}
@@ -114,7 +95,7 @@ export const AuthUser = () => {
                     }}
                 >
                     <a style={{ marginBottom: "20px", color: "#004C80", fontSize: 35, fontFamily: "serif" }}>
-                        Registre-se
+                        Login
                     </a>
                     <form
                         style={{
