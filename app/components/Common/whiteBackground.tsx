@@ -1,6 +1,6 @@
 import React from "react";
 
-export const BlueButton: React.FC = () => {
+export const WhiteBackground: React.FC = () => {
     return (
         <div style={{
             backgroundColor: '#fff',
@@ -9,6 +9,6 @@ export const BlueButton: React.FC = () => {
     );
 };
 
-export default BlueButton;
+export default WhiteBackground;
 
 
