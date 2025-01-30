@@ -16,6 +16,7 @@ export const BlueButton: React.FC<Props> = ({ text, onClick }) => {
                 border: "1px solid #FFF",
                 cursor: "pointer",
             }}
+            type="button"
             onClick={onClick}
         >
             {text}

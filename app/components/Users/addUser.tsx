@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import BlueButton from "../Common/blueButton";
 import WhiteButton from "../Common/whiteButton";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export const AddUser = () => {
   const [name, setName] = useState("");
@@ -13,6 +13,7 @@ export const AddUser = () => {
   const [consumidor, setConsumidor] = useState(0);
   const [fornecedor, setFornecedor] = useState(0);
   const [userType, setUserType] = useState("");
+  const router = useRouter();
 
   async function save() {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/users`, {
@@ -25,10 +26,10 @@ export const AddUser = () => {
         type: userType,
       }),
     });
-
+    // event?.preventDefault()
     if (res.ok) {
       alert("Usuário cadastrado com sucesso");
-      redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/login`);
+      router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/login`);
     } else {
       alert("Erro no cadastro de usuário");
     }
@@ -47,11 +48,11 @@ export const AddUser = () => {
   }
 
   function mudaRegister() {
-    redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/register`);
+    router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/register`);
   }
 
   function mudaLogin() {
-    redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/login`);
+    router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/login`);
   }
   return (
     <div
