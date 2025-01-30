@@ -22,12 +22,12 @@ export const NavBar: React.FC<Props> = ({ usertype }) => {
             padding: '10px',
             color: '#fff'
         }}>
-            <img src="/images/logo.png" alt="Logo" className="logo" style={{width:'40px',height:'100%'}}/>
+            <img src="/images/logo.png" alt="Logo" className="logo" style={{width:'20%',height:'100%'}}/>
             <nav>
                 <HeaderItem text="Home" href="localhost:3000/"/>
                 <HeaderItem text="Histórico" href="localhost:3000/historico"/>
                 <HeaderItem text="Suporte" href="localhost:3000/suporte"/>
-                <HeaderItem text="Sobre" href="localhost:3000/sobre"/>
+                <HeaderItem text="Simular" href="localhost:3000/simular"/>
                 <HeaderItem text="Contato" href="localhost:3000/contato"/>
                 <HeaderItem text="Login" href="localhost:3000/login"/>
             </nav>
