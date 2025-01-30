@@ -10,11 +10,13 @@ export const BlueButton: React.FC<Props> = ({ text, onClick }) => {
         <button
             style={{
                 backgroundColor: "rgb(0, 76, 128)",
-                color: "#FFF",
-                padding: "10px",
+                color: "#FFC531",
+                padding: "15px",
                 borderRadius: "4px",
                 border: "1px solid #FFF",
                 cursor: "pointer",
+                fontFamily: "Averia Serif Libre",
+                fontSize: "1.2rem",
             }}
             type="button"
             onClick={onClick}
