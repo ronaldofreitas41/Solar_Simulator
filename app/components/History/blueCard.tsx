@@ -2,6 +2,7 @@
 import React from 'react';
 import WhiteButton from '../Common/whiteButton';
 import YellowButton from '../Common/yellowButton';
+import Line from './line';
 
 type Props = {
     title: string;
@@ -12,10 +13,12 @@ type Props = {
         realGeneration: string;
         prediction: string;
         payback: string;
+        irradiation: string;
+        materiais: string;
     };
 };
 
-const BlueModal: React.FC<Props> = (title, data) => {
+const BlueCard: React.FC<Props> = ({ title, data }) => {
     return (
         <div
             style={{
@@ -37,32 +40,34 @@ const BlueModal: React.FC<Props> = (title, data) => {
                     color: '#FFC531',
                 }}
             >
-                {"title"}
+                {title ? (title) : ("Title")}
             </h3>
-            <p>
-                <strong>Data:</strong> {"teste"}
-            </p>
-            <p>
-                <strong>Área:</strong> {"teste"}
-            </p>
-            <p>
-                <strong>Geração Estimada:</strong> {"teste"}
-            </p>
-            <p>
-                <strong>Geração Real:</strong> {"data.realGeneration"}
-            </p>
-            <p>
-                <strong>Predição:</strong> {"data.prediction"}
-            </p>
-            <p>
-                <strong>Payback:</strong> {"data.payback"}
-            </p>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
-                <WhiteButton text="Editar" />
-                <YellowButton text="Excluir"/>
-
+            {data ? (
+                <>
+                    <Line id={"Data: "} text={data.date} />
+                    <Line id={"Área: "} text={data.area} />
+                    <Line id={"Geração Estimada: "} text={data.estimatedGeneration} />
+                    <Line id={"Geração Real: "} text={data.realGeneration} />
+                    <Line id={"Taxa de Predição: "} text={data.prediction} />
+                    <Line id={"Payback: "} text={data.payback} />
+                    <Line id={"Irradiação: "} text={data.irradiation} />
+                    <div>
+                        <strong>Materiais:</strong>
+                        {data.materiais.split('\n').map((item, index) => (
+                            <p key={index}>{item}</p>
+                        ))}
+                    </div>
+                </>
+            ) : (
+                <p>Dados não disponíveis</p>
+            )}
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                <div style={{ marginRight: '40px' }}>
+                    <WhiteButton text="Editar" />
+                </div>
+                <YellowButton text="Excluir" />
             </div>
         </div>
     );
 }
-export default BlueModal;
+export default BlueCard;
