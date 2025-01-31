@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import MapComponent from "./mapComponent";
 import { FaHome, FaIndustry, FaTractor } from "react-icons/fa";
-import NavBar from "../Common/navBar";
+import { NavBar } from "../Common/navBar";
 import YellowLine from "../Common/yellowLine";
 import BlueButton from "../Common/blueButton";
 
@@ -13,6 +13,14 @@ const Simulator = () => {
     const [selectedOption, setSelectedOption] = useState('Doméstico');
     const [selectedOption2, setSelectedOption2] = useState('Consumo Médio');
     const [area, setArea] = useState('Área');
+
+    function calculaGeracao(){
+        let wp: any;
+        
+    }
+
+
+
 
     return (
         <div>

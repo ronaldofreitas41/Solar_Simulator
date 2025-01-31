@@ -12,21 +12,15 @@ const HeaderItem: React.FC<Props> = ({ text, href }) => {
 
     function handleClick(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
         event.preventDefault();
-        const url = href.startsWith('http://') || href.startsWith('https://') ? href : `http://${href}`;
-        console.log("teste");
-        router.push(url);
+        router.push(href);
     }
 
     return (
-        <a href={href}
-            style={{
-                color: '#FFC531',
-                textDecoration: 'none',
-                padding: '10px',
-                fontSize: '1.2em',
-                paddingLeft: '40px',
-                fontFamily: 'Averia Serif Libre'
-            }}
+        <a 
+            href={href} 
+            style={{ color: '#FFC531', textDecoration: 'none', fontSize: '20px', fontWeight: 'bold', padding: '10px 15px', transition: 'color 0.3s' }}
+            onMouseOver={(e) => e.currentTarget.style.color = '#FFD700'}
+            onMouseOut={(e) => e.currentTarget.style.color = '#FFC531'}
             onClick={handleClick}
         >
             {text}

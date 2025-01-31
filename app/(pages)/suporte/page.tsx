@@ -1,4 +1,4 @@
-import NavBar from "@/app/components/Common/navBar";
+import  { NavBar } from "@/app/components/Common/navBar";
 import YellowLine from "@/app/components/Common/yellowLine";
 import React from "react";
 
