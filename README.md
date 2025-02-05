@@ -1,4 +1,5 @@
-# **CSI606-2024-02 - Remoto - Proposta de Trabalho Final**
+# **CSI606-2025-02 - Remoto - Proposta de Trabalho Final**
+# **CSI496-2025-02 - Remoto - Proposta de Conclusão de Curso**
 
 ## *Discente: Ronaldo Luiz de Freitas Santos*
 
