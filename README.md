@@ -58,31 +58,31 @@
 1- Tela de Login e registro;
 
 <p align="center">
-  <img src="Prototipos2/login.png" alt="Tela Inicial" width="300">
-  <img src="Prototipos2/registro.png" alt="Equipamentos" width="300">
+  <img src="Prototipos/login.png" alt="Tela Inicial" width="300">
+  <img src="Prototipos/registro.png" alt="Equipamentos" width="300">
 </p>
 
 2- Home;
 
 <p align="center">
- <img src="Prototipos2/home.png" alt="Tela Inicial" width="300">
+ <img src="Prototipos/home.png" alt="Tela Inicial" width="300">
 </p>
 
 3- Simular;
 
 <p align="center">
- <img src="Prototipos2/simular1.png" alt="Tela Inicial" width="300">
- <img src="Prototipos2/simular2.png" alt="Tela Inicial" width="300">
+ <img src="Prototipos/simular1.png" alt="Tela Inicial" width="300">
+ <img src="Prototipos/simular2.png" alt="Tela Inicial" width="300">
 </p>
 
 4- Suporte;
 
 <p align="center">
- <img src="Prototipos2/sac.png" alt="Tela Inicial" width="300">
+ <img src="Prototipos/sac.png" alt="Tela Inicial" width="300">
 </p>
 
 5- Historico.
 
 <p align="center">
- <img src="Prototipos2/historico.png" alt="Assinatura de Contrato" width="300">
+ <img src="Prototipos/historico.png" alt="Assinatura de Contrato" width="300">
 </p>
