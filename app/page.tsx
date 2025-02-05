@@ -9,17 +9,29 @@ export default function Home() {
   const usertyp = 'admin';
 
   return (
-    <div style={{ position: 'relative', width: '100%', minHeight: '100vh', backgroundColor: '#f5f5f5', zIndex:'-2'}}>
+    <div style={{ position: 'relative', width: '100%', minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
       <NavBar usertype={usertyp} />
       <YellowLine />
 
       {/* Hero Section */}
-      <div style={{ position: 'relative', width: '100%', height: '500px', background: 'url(/images/hero-bg.jpg) center/cover no-repeat', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', textAlign: 'center', paddingTop: '20px', paddingBottom: '20px' }}>
-        <img src="/images/img1.jpg" alt="Solar Simulator Logo" style={{ width: '100%', zIndex:'-1', maxHeight:"900px" }}  />
+      <div style={{ position: 'relative', width: '100%', height: '500px', background: 'url(/images/hero-bg.jpg) center/cover no-repeat', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', textAlign: 'center', paddingTop: '20px', paddingBottom: '20px', overflow: 'hidden' }}>
+        <img
+          src="/images/img1.jpg"
+          alt="Solar Simulator Logo"
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            zIndex: 0 // Garante que a imagem fique atrás do conteúdo
+          }}
+        />
       </div>
 
       {/* Features Section */}
-      <div style={{ display: 'flex', justifyContent: 'space-around', padding: '50px 10%', backgroundColor: '#0D3048', color: 'white', borderRadius: '0 0 100px 100px', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-around', padding: '50px 10%', backgroundColor: '#0D3048', color: 'white', borderRadius: '0 0 100px 100px', flexWrap: 'wrap', position: 'relative', zIndex: 2 }}>
         <div style={{ textAlign: 'center', maxWidth: '300px', margin: '20px 0' }}>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <FaCalculator style={{ width: '80px', height: '80px', marginBottom: '20px' }} />
@@ -41,10 +53,10 @@ export default function Home() {
           <h3>Economia Garantida</h3>
           <p>Analise o retorno do seu investimento com relatórios detalhados.</p>
         </div>
-      </div>    
+      </div>
 
       {/* About Section */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '50px 10%' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '50px 10%', position: 'relative', zIndex: 2 }}>
         <div style={{ maxWidth: '600px' }}>
           <h2 style={{ color: '#0D3048', fontSize: '36px', fontWeight: 'bold' }}>Sobre o Solar Simulator</h2>
           <p style={{ fontSize: '20px', textAlign: 'justify' }}>

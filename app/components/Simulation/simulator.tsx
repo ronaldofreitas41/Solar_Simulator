@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MapComponent from "./mapComponent";
 import { FaHome, FaIndustry, FaTractor } from "react-icons/fa";
 import { NavBar } from "../Common/navBar";
@@ -14,12 +14,47 @@ const Simulator = () => {
     const [selectedOption2, setSelectedOption2] = useState('Consumo Médio');
     const [area, setArea] = useState('Área');
 
-    function calculaGeracao(){
-        let wp: any;
-        
+
+    
+    async function calculaGeracao() {
+        var data = await getPlates();
+        // data = JSON.parse(data);
+        let plateData:any = Object.values(data.data);
+        if (Array.isArray(plateData)) {
+            // console.log(plateData)
+            plateData.forEach((e, index) => {
+                console.log("Index: ", index, "\nElement:", e.price);
+            });
+        } else {
+            console.error('plateData is not an array');
+        }
     }
 
+    async function getIrradiation(){
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/irradiaton`,{
+                method:'GET',
+            });
 
+            if(res.ok){
+                const irradiationData = await res.json();
+                return irradiationData;
+            }else{
+                throw new Error('Sem dados de irradiação disponníveis')
+            }
+    }
+
+    async function getPlates() {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/plates`, {
+            method: 'GET',
+        });
+
+        if (res.ok) {
+            const plateData = await res.json();
+            return plateData;
+        } else {
+            throw new Error('Sem Placas cadastradas');
+        }
+    }
 
 
     return (
@@ -240,7 +275,7 @@ const Simulator = () => {
                             marginTop: '20px',
                         }}
                     >
-                        <BlueButton text='Enviar ' />
+                        <BlueButton text='Enviar ' onClick={calculaGeracao} />
                     </div>
                 </div>
             </div>
@@ -254,6 +289,7 @@ const Simulator = () => {
                     right: '0',
                 }}>
                 <MapComponent />
+
             </div>
         </div>
     );

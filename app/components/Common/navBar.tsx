@@ -8,7 +8,7 @@ interface Props {
 
 export const NavBar: React.FC<Props> = ({ usertype }) => {
     return (
-        <header style={{
+        <div style={{
             backgroundColor: '#0D3048',
             color: 'white',
             padding: '0px 50px',
@@ -37,6 +37,6 @@ export const NavBar: React.FC<Props> = ({ usertype }) => {
                 <HeaderItem text="Contato" href="/contato" />
                 <HeaderItem text="Login" href="/login" />
             </nav>
-        </header>
+        </div>
     );
 };

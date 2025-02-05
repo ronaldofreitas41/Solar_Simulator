@@ -14,7 +14,7 @@ export const AuthUser = () => {
 
     async function submit() {
         // Envio dos dados ao servidor para verificação
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/checkUsers'`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/checkUsers`, {
             method: 'POST',
             body: JSON.stringify({
                 "email": email,
