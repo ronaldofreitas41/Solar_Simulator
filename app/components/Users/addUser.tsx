@@ -15,6 +15,18 @@ export const AddUser = () => {
   const [userType, setUserType] = useState("");
   const router = useRouter();
 
+  const formatCPF = (value: string) => {
+    return value
+      .replace(/\D/g, "") // Remove tudo que não é dígito
+      .replace(/(\d{3})(\d)/, "$1.$2") // Coloca um ponto entre o terceiro e o quarto dígitos
+      .replace(/(\d{3})(\d)/, "$1.$2") // Coloca um ponto entre o sexto e o sétimo dígitos
+      .replace(/(\d{3})(\d{1,2})$/, "$1-$2"); // Coloca um hífen entre o nono e o décimo dígitos
+  };
+
+  const handleCPFChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCPF(formatCPF(event.target.value));
+  };
+
   async function save() {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/users`, {
       method: "POST",
@@ -144,7 +156,8 @@ export const AddUser = () => {
             <input
               type="text"
               placeholder="CPF"
-              maxLength={11}
+              value={cpf}
+              maxLength={14}
               style={{
                 padding: "10px",
                 marginBottom: "10px",
@@ -152,7 +165,7 @@ export const AddUser = () => {
                 borderRadius: "4px",
                 color: "#000",
               }}
-              onChange={(event) => setCPF(event.target.value)}
+              onChange={handleCPFChange}
             />
             <input
               type="text"
