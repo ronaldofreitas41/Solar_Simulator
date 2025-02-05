@@ -10,7 +10,7 @@ export const YellowButton: React.FC<Props> = ({ text, onClick }) => {
         <button
             style={{
                 backgroundColor: "#FFC531",
-                color: "#000",
+                color: "#0D3048",
                 padding: "10px",
                 borderRadius: "4px",
                 border: "1px solid #FFC531",

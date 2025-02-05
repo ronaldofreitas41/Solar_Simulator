@@ -1,3 +1,4 @@
+// NavBar Component
 import React from 'react';
 import HeaderItem from './headeritem';
 
@@ -7,32 +8,35 @@ interface Props {
 
 export const NavBar: React.FC<Props> = ({ usertype }) => {
     return (
-        // Container principal
-        <header className="navbar" style={{
-            background: '#083553',
-            height: '8%',
-            minHeight: '8%',
-            maxHeight: '110px',
-            width: '100%',
-            maxWidth: '100%',
-            position: 'relative', // Use 'relative' em vez de 'absolute'
+        <header style={{
+            backgroundColor: '#0D3048',
+            color: 'white',
+            padding: '0px 50px',
             display: 'flex',
-            alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '10px',
-            color: '#fff'
+            alignItems: 'center',
+            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+            position: 'fixed',
+            width: '100%',
+            zIndex: 50
         }}>
-            <img src="/images/logo.png" alt="Logo" className="logo" style={{width:'20%',height:'100%'}}/>
-            <nav>
-                <HeaderItem text="Home" href="localhost:3000/"/>
-                <HeaderItem text="Histórico" href="localhost:3000/historico"/>
-                <HeaderItem text="Suporte" href="localhost:3000/suporte"/>
-                <HeaderItem text="Simular" href="localhost:3000/simular"/>
-                <HeaderItem text="Contato" href="localhost:3000/contato"/>
-                <HeaderItem text="Login" href="localhost:3000/login"/>
+            <img
+                src="/images/logo.png"
+                alt="Logo"
+                style={{
+                    width: '25%'
+                }} />
+            <nav style={{
+                display: 'flex',
+                gap: '25px'
+            }}>
+                <HeaderItem text="Home" href="/" />
+                <HeaderItem text="Histórico" href="/historico" />
+                <HeaderItem text="Suporte" href="/suporte" />
+                <HeaderItem text="Simular" href="/simular" />
+                <HeaderItem text="Contato" href="/contato" />
+                <HeaderItem text="Login" href="/login" />
             </nav>
         </header>
     );
 };
-
-export default NavBar;

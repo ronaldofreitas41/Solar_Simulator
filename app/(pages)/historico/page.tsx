@@ -1,5 +1,5 @@
 'use client';
-import NavBar from "@/app/components/Common/navBar";
+import  { NavBar } from "@/app/components/Common/navBar";
 import YellowLine from "@/app/components/Common/yellowLine";
 import BlueCard from "@/app/components/History/blueCard";
 import React from "react";
