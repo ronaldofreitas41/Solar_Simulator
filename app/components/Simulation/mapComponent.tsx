@@ -1,30 +1,40 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
 import { GoogleMap, useLoadScript, Marker } from '@react-google-maps/api';
+import { FaSearch } from 'react-icons/fa';
+
+type Library = 'places';
+
+const libraries: Library[] = ['places']; // Defina a constante libraries fora do componente
 
 interface MapComponentProps {
     onLocationChange: (location: string) => void; // Função de callback para atualizar a localização
 }
 
-const MapComponent = () => {
+const MapComponent: React.FC<MapComponentProps> = ({ onLocationChange }) => {
     const [userLocation, setUserLocation] = useState({ lat: -19.8386, lng: -43.8605 });
     const [address, setAddress] = useState('');
     const [geocoder, setGeocoder] = useState<google.maps.Geocoder | null>(null);
     const autocompleteInputRef = useRef<HTMLInputElement>(null);
 
     const { isLoaded } = useLoadScript({
-        googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '', // Substitua pela sua chave de API
-        libraries: ['places'],
+        googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '',
+        libraries, // Use a constante libraries aqui
     });
+
+    // Função para atualizar a localização e chamar o callback
+    const updateLocation = (lat: number, lng: number) => {
+        const newLocation = { lat, lng };
+        setUserLocation(newLocation);
+        onLocationChange(`Lat: ${lat}, Lon: ${lng}`); // Atualiza o campo de localização no componente pai
+    };
 
     useEffect(() => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
-                    setUserLocation({
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude,
-                    });
+                    const { latitude, longitude } = position.coords;
+                    updateLocation(latitude, longitude); // Usa a função updateLocation
                 },
                 (error) => {
                     console.error('Erro ao obter localização:', error);
@@ -32,11 +42,11 @@ const MapComponent = () => {
             );
         }
 
-        // Initialize the Geocoder
+        // Inicializa o Geocoder
         if (window.google) {
             setGeocoder(new window.google.maps.Geocoder());
         }
-    }, []);
+    }, []); // Remova onLocationChange das dependências
 
     useEffect(() => {
         if (isLoaded && autocompleteInputRef.current) {
@@ -44,23 +54,24 @@ const MapComponent = () => {
             autocompleteInstance.addListener('place_changed', () => {
                 const place = autocompleteInstance.getPlace();
                 if (place.geometry) {
-                    setUserLocation({
-                        lat: place.geometry?.location?.lat() || 0,
-                        lng: place.geometry?.location?.lng() || 0,
-                    });
+                    const lat = place.geometry?.location?.lat() || 0;
+                    const lng = place.geometry?.location?.lng() || 0;
+                    // const { lat, lng } = place.geometry.location;
+                    updateLocation(lat, lng); // Usa a função updateLocation
                 } else {
                     alert('Localização não encontrada');
                 }
             });
         }
-    }, [isLoaded]);
+    }, [isLoaded]); // Remova onLocationChange das dependências
 
-    const handleSearch = () => {
+    const handleSearch = (event: React.FormEvent) => {
+        event.preventDefault(); // Impede a recarga da página
         if (geocoder && address) {
             geocoder.geocode({ address }, (results, status) => {
                 if (status === 'OK' && results && results[0]) {
                     const { lat, lng } = results[0].geometry.location;
-                    setUserLocation({ lat: lat(), lng: lng() });
+                    updateLocation(lat(), lng()); // Usa a função updateLocation
                 } else {
                     alert('Localização não encontrada');
                 }
@@ -72,44 +83,45 @@ const MapComponent = () => {
 
     return (
         <div style={{ height: '100vh', width: '100%', position: 'relative' }}>
-            <input
-                ref={autocompleteInputRef}
-                type="text"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                placeholder="Digite o nome de um lugar"
-                style={{
-                    color: 'black',
-                    position: 'absolute',
-                    top: '20px',
-                    left: '20px',
-                    padding: '10px',
-                    zIndex: 10,
-                    backgroundColor: 'white',
-                    borderRadius: '5px',
-                    border: '1px solid #ccc',
-                }}
-            />
-            <button
-                onClick={handleSearch}
-                style={{
-                    position: 'absolute',
-                    top: '60px',
-                    left: '20px',
-                    padding: '10px',
-                    zIndex: 10,
-                    backgroundColor: '#007bff',
-                    color: 'white',
-                    borderRadius: '5px',
-                    border: 'none',
-                }}
-            >
-                Buscar Localização
-            </button>
+            <form onSubmit={handleSearch} style={{ position: 'absolute', top: '20px', left: '20px', zIndex: 10, marginLeft: '30%' }}>
+                <input
+                    ref={autocompleteInputRef}
+                    type="text"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    placeholder="Digite o nome de um lugar"
+                    style={{
+                        color: 'black',
+                        padding: '10px',
+                        backgroundColor: 'white',
+                        borderRadius: '30px 0 0 30px',
+                        // border: '1px solid #ccc',
+                        width: '300px',
+                    }}
+                />
+                <button
+                    type="submit"
+                    style={{
+                        marginLeft: '0',
+                        padding: '10px',
+                        backgroundColor: '#fff',
+                        color: 'white',
+                        borderRadius: '0 30px 30px 0',
+                        border: 'none',
+                    }}
+                >
+                    <FaSearch style={{ color: '#000', height: '30px' }} />
+                </button>
+            </form>
             <GoogleMap
                 center={userLocation}
                 zoom={15}
                 mapContainerStyle={{ height: '100%', width: '100%' }}
+                onClick={(e) => {
+                    if (e.latLng) {
+                        updateLocation(e.latLng.lat(), e.latLng.lng()); // Atualiza a localização ao clicar no mapa
+                    }
+                }}
             >
                 <Marker position={userLocation} />
             </GoogleMap>

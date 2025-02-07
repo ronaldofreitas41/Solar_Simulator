@@ -5,7 +5,7 @@ import { NextResponse, NextRequest } from "next/server";
 export async function GET(request: NextRequest) {
     try {
         const dbRef = ref(database);
-        const snapshot = await get(child(dbRef, 'planoInclinado'));
+        const snapshot = await get(child(dbRef, 'PlanoInclinado'));
 
         if (snapshot.exists()) {
             return NextResponse.json({ data: snapshot.val() }, { status: 200 });
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     try {
         const data = await request.json();
         console.log('Data received:', data);    
-        const irradiacaoRef = push(ref(database, 'planoInclinado'));
+        const irradiacaoRef = push(ref(database, 'PlanoInclinado'));
         await set(irradiacaoRef, data);
 
         return NextResponse.json({ message: 'Data saved successfully!' }, { status: 200 });

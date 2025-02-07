@@ -24,16 +24,10 @@ const Simulator = () => {
         }
     }, []);
 
-
-    // Função de callback para atualizar a localização
     const handleLocationChange = (location: string) => {
         setLocalizacao(location);
     };
-    /* 
-        Método para se calcular o melhor custo beneficio entre as placas
-        @Params: plateData -> lista de placas retornadas da base de dados
-        @Return: index -> indice da placa que contem o melhor custo beneficio
-    */
+
     function melhorCustoBeneficio(plateData: any) {
         let max = Number.MAX_VALUE;
         let bestIndex = -1;
@@ -53,11 +47,6 @@ const Simulator = () => {
         return bestIndex;
     }
 
-    /* 
-        Método para se extrair a latitude e longitude da localização desejada para a simulação
-        @Params: localização -> localização contida no formulário que contem esse dado em texto
-        @Return: coordenadas -> Coordenadas Cartesianas da localização fornecida
-    */
     function getCoordenadas() {
         let labelLoc: string[] = localizacao.split(":");
         let lonLabel = parseFloat(labelLoc[2]);
@@ -68,23 +57,14 @@ const Simulator = () => {
         const cordenadas = [latLabel, lonLabel];
         return cordenadas;
     }
-    /*
-    Função que irá calcular a geração de energia do sistema fotovoltaico e descobrira quantas placas são necessárias
-    para atender ao consumo do usuário
-    @Params: Nenhum
-    @Return: Nenhum
-    */
-    async function calculaGeracao() {
 
-        //Requisitando dados do servidor
+    async function calculaGeracao() {
         let plates = await getPlates();
         let irradiation = await getIrradiation();
 
-        //convertendo os dados em arrays contendo os dados
         let plateData: any = Object.values(plates.data);
         let irradiationData: any = Object.values(irradiation.data);
 
-        //Dados extraidos de funções a parte
         const coordenadas = getCoordenadas();
         const bestPlateIndex = melhorCustoBeneficio(plateData);
 
@@ -92,41 +72,13 @@ const Simulator = () => {
             irradiationData.forEach(e => {
                 if (Number(e.LAT.toFixed(1)) == coordenadas[0]) {
                     if (Number(e.LON.toFixed(1)) == coordenadas[1]) {
-                        //Irradiação Solar media Diaria
                         let irradiacaoMedia = e.ANNUAL;
-
-                        //Área do painel de melhor custo beneficio
                         let area = 2
-
-                        //Potencia do Painel de melhor custo beneficio
                         let potencia = 500
-                        /*
-                        Eficiencia do Painel: pode ser obtida dividindo a potência do painel pela potência teórica recebida
-    
-                        Formula:
-                        e = p/isp*a
-    
-                        e -> eficiencia
-                        p -> potencia do painel
-                        isp -> irradiação solar padrão em condições de teste geralmente = 1000W/m²
-                        a -> area
-                        */
                         let eficiencia = potencia / (1000 * area)
                         console.log("Eficiencia do Painel: ", eficiencia);
-                        /*
-                        Geração da placa por dia em kWh/dia
-    
-                        Formula:
-                        g = (i * a * e)/1000
-    
-                        g -> Geração
-                        e -> Eficiencia
-                        i -> Irradiação Solar Média Diária
-                        a -> Área da placa
-                        */
                         let geracaoPlaca = (irradiacaoMedia * area * eficiencia) / 1000;
                         let geracaoPlacaMensal = geracaoPlaca * 30;
-                        //Quantidade de placas necessarias para atender ao consumo mensal do usuário
                         let n = parseFloat(consumo) / geracaoPlacaMensal;
 
                         alert('Em um sistema composto por placas com potencial de 500w em condições ideais com 80% de aproveitamento da geração na sua localização é necessário: ' + n + "placas");
@@ -134,10 +86,7 @@ const Simulator = () => {
                     }
                 }
             });
-
         }
-
-
     }
 
     async function getIrradiation() {
@@ -182,70 +131,70 @@ const Simulator = () => {
             throw new Error('Sem Placas cadastradas');
         }
     }
-
     return (
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {/* NavBar fixa */}
+        <div style={{ display: 'flex', flexDirection: 'column', backgroundColor: '#f7f7f7', minHeight: '100vh' }}>
             <NavBar usertype={usertyp} />
-
-            {/* Container principal */}
             <div style={{ display: 'flex', marginTop: '70px', height: 'calc(100vh - 70px)' }}>
-
-                {/* Formulário */}
                 <div
                     style={{
                         backgroundColor: '#fff',
                         width: '30%',
+                        height: '100%',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        borderRight: '1px solid #000',
-                        padding: '20px',
+                        borderRight: '1px solid #e0e0e0',
+                        padding: '40px',
+                        boxShadow: '2px 0 5px rgba(0, 0, 0, 0.1)',
                     }}
                 >
                     <p style={{
-                        color: '#000',
+                        color: '#333',
                         fontFamily: 'Averia Serif Libre',
                         fontSize: '30px',
                         fontWeight: 'bold',
                         textAlign: 'center',
+                        marginBottom: '20px',
                     }}>
                         Informe os dados abaixo
                     </p>
 
                     <p style={{
-                        color: '#000',
+                        color: '#333',
                         fontFamily: 'Averia Serif Libre',
-                        fontSize: '25px',
+                        fontSize: '20px',
                         alignSelf: 'flex-start',
+                        marginBottom: '10px',
                     }}>
-                        Localização
+                        Localização em Coordenadas
                     </p>
 
                     <input
                         type="text"
                         id="Localizacao"
+                        readOnly
                         style={{
-                            border: '2px solid #000',
-                            borderRadius: '30px',
+                            border: '2px solid #e0e0e0',
+                            borderRadius: '10px',
                             width: '100%',
-                            backgroundColor: '#FEC330',
-                            padding: '10px',
-                            color: '#000',
+                            backgroundColor: '#f9f9f9',
+                            padding: '12px',
+                            color: '#333',
                             fontWeight: 'bold',
                             fontFamily: 'Averia Serif Libre',
+                            marginBottom: '20px',
                         }}
                         value={localizacao}
                         onChange={(e) => setLocalizacao(e.target.value)}
                     />
 
-                    {/* Tipo de Consumo Elétrico */}
                     <p style={{
-                        color: '#000',
+                        color: '#333',
                         fontFamily: 'Averia Serif Libre',
-                        fontSize: '25px',
+                        fontSize: '20px',
                         marginTop: '20px',
                         alignSelf: 'flex-start',
+                        marginBottom: '10px',
                     }}>
                         Tipo de Consumo Elétrico:
                     </p>
@@ -255,11 +204,12 @@ const Simulator = () => {
                         flexDirection: 'column',
                         gap: '15px',
                         alignSelf: 'flex-start',
+                        marginBottom: '20px',
                     }}>
                         {[
-                            { value: 'Doméstico', icon: <FaHome size={24} /> },
-                            { value: 'Agrário', icon: <FaTractor size={24} /> },
-                            { value: 'Industrial', icon: <FaIndustry size={24} /> }
+                            { value: 'Doméstico', icon: <FaHome size={24} style={{ color: '#000' }} /> },
+                            { value: 'Agrário', icon: <FaTractor size={24} style={{ color: '#000' }} /> },
+                            { value: 'Industrial', icon: <FaIndustry size={24} style={{ color: '#000' }} /> }
                         ].map((item) => (
                             <label key={item.value} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                 <input
@@ -268,38 +218,39 @@ const Simulator = () => {
                                     value={item.value}
                                     checked={selectedOption === item.value}
                                     onChange={(e) => setSelectedOption(e.target.value)}
-                                    style={{ accentColor: '#000' }}
+                                    style={{ accentColor: '#333' }}
                                 />
                                 {item.icon}
                                 <span style={{
                                     fontFamily: 'Averia Serif Libre',
-                                    fontSize: '20px',
-                                    color: '#000',
+                                    fontSize: '18px',
+                                    color: '#333',
                                 }}>{item.value}</span>
                             </label>
                         ))}
                     </div>
 
-                    {/* Consumo Elétrico */}
                     <p style={{
-                        color: '#000',
+                        color: '#333',
                         fontFamily: 'Averia Serif Libre',
-                        fontSize: '25px',
+                        fontSize: '20px',
                         marginTop: '20px',
                         alignSelf: 'flex-start',
+                        marginBottom: '10px',
                     }}>
                         Consumo Elétrico
                     </p>
 
-                    <div style={{ alignSelf: 'flex-start' }}>
+                    <div style={{ alignSelf: 'flex-start', marginBottom: '20px' }}>
                         <label style={{ marginRight: '25px' }}>
                             <input type="radio"
                                 name="consumo"
                                 value="Consumo Médio"
                                 checked={selectedOption2 === 'Consumo Médio'}
                                 onChange={(e) => setSelectedOption2(e.target.value)}
+                                style={{ accentColor: '#333' }}
                             />
-                            <span style={{ fontFamily: 'Averia Serif Libre', fontSize: '20px', color: '#000' }}>
+                            <span style={{ fontFamily: 'Averia Serif Libre', fontSize: '18px', color: '#333' }}>
                                 Consumo Médio Mensal
                             </span>
                         </label>
@@ -309,8 +260,9 @@ const Simulator = () => {
                                 value="Consumo Anual"
                                 checked={selectedOption2 === 'Consumo Anual'}
                                 onChange={(e) => setSelectedOption2(e.target.value)}
+                                style={{ accentColor: '#333' }}
                             />
-                            <span style={{ fontFamily: 'Averia Serif Libre', fontSize: '20px', color: '#000' }}>
+                            <span style={{ fontFamily: 'Averia Serif Libre', fontSize: '18px', color: '#333' }}>
                                 Consumo Anual
                             </span>
                         </label>
@@ -320,26 +272,27 @@ const Simulator = () => {
                         type="text"
                         id="consumo"
                         style={{
-                            border: '2px solid #000',
-                            borderRadius: '30px',
+                            border: '2px solid #e0e0e0',
+                            borderRadius: '10px',
                             width: '100%',
-                            backgroundColor: '#FEC330',
-                            padding: '10px',
-                            color: '#000',
+                            backgroundColor: '#f9f9f9',
+                            padding: '12px',
+                            color: '#333',
                             fontWeight: 'bold',
                             fontFamily: 'Averia Serif Libre',
+                            marginBottom: '20px',
                         }}
                         value={consumo}
                         onChange={(e) => setConsumo(e.target.value)}
                     />
 
-                    {/* Área do terreno */}
                     <p style={{
-                        color: '#000',
+                        color: '#333',
                         fontFamily: 'Averia Serif Libre',
-                        fontSize: '25px',
+                        fontSize: '20px',
                         marginTop: '20px',
                         alignSelf: 'flex-start',
+                        marginBottom: '10px',
                     }}>
                         Área do terreno disponível
                     </p>
@@ -348,27 +301,26 @@ const Simulator = () => {
                         type="text"
                         id="Area"
                         style={{
-                            border: '2px solid #000',
-                            borderRadius: '30px',
+                            border: '2px solid #e0e0e0',
+                            borderRadius: '10px',
                             width: '100%',
-                            backgroundColor: '#FEC330',
-                            padding: '10px',
-                            color: '#000',
+                            backgroundColor: '#f9f9f9',
+                            padding: '12px',
+                            color: '#333',
                             fontWeight: 'bold',
                             fontFamily: 'Averia Serif Libre',
+                            marginBottom: '20px',
                         }}
                         value={area}
                         onChange={(e) => setArea(e.target.value)}
                     />
 
-                    {/* Botão Enviar */}
                     <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginTop: '20px' }}>
                         <BlueButton text='Enviar' onClick={calculaGeracao} />
                     </div>
                 </div>
 
-                {/* Mapa */}
-                <div id="mapa" style={{ width: '70%', height: '100%' }}>
+                <div id="mapa" style={{ width: '70%', height: '100%', backgroundColor: '#fff' }}>
                     <MapComponent onLocationChange={handleLocationChange} />
                 </div>
             </div>

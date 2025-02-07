@@ -18,6 +18,7 @@ export const NavBar: React.FC<Props> = ({ usertype }) => {
             boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
             position: 'fixed',
             width: '100%',
+            height:'70px',
             zIndex: 50
         }}>
             <img
