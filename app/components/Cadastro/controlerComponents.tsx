@@ -1,0 +1,75 @@
+'use client';
+import { useState } from 'react';
+
+const controllerFields = [
+    { label: "Corrente Nominal", type: "text", placeholder: "30A" },
+    { label: "Tensão de Trabalho", type: "text", placeholder: "12V / 24V" },
+    { label: "Tipo de Controlador", type: "text", placeholder: "PWM / MPPT" },
+    { label: "Eficiência Máxima", type: "text", placeholder: "98%" },
+    { label: "Tensão Máxima de Entrada", type: "text", placeholder: "100V" },
+    { label: "Capacidade Máxima de Painéis", type: "text", placeholder: "1000W" },
+    { label: "Modo de Carga", type: "text", placeholder: "Bulk, Absorção, Flutuação" },
+    { label: "Proteções", type: "text", placeholder: "Sobrecarga, Curto-circuito, Inversão de polaridade" },
+    { label: "Interface de Monitoramento", type: "text", placeholder: "LCD / Bluetooth / Wi-Fi" },
+    { label: "Temperatura de Operação", type: "text", placeholder: "-20°C a 50°C" },
+    { label: "Dimensões", type: "text", placeholder: "200mm x 150mm x 50mm" },
+    { label: "Peso", type: "text", placeholder: "1.2kg" },
+];
+
+
+export default function ControllerComponents() {
+    const [cableData, setCableData] = useState<{ [key: string]: any }>({});
+
+    const handleChange = (field: string, value: any) => {
+        setCableData((prev) => ({ ...prev, [field]: value }));
+    };
+
+    return (
+        <div style={{
+            display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px',
+            width: '100%', backgroundColor: '#fff', borderRadius: '10px',
+            marginTop: '20px', 
+        }}>
+            {controllerFields.map((field, index) => (
+                <div key={index} style={{ width: '100%' }}>
+                    <p style={{
+                        fontFamily: 'Averia Serif Libre', fontSize: '20px', color: '#333', marginBottom: '5px'
+                    }}>
+                        {field.label}
+                    </p>
+                    {field.type === "checkbox" ? (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <input
+                                type="checkbox"
+                                checked={!!cableData[field.label]}
+                                onChange={(e) => handleChange(field.label, e.target.checked)}
+                                style={{ accentColor: '#333', transform: 'scale(1.2)' }}
+                            />
+                            <span style={{ fontSize: '16px', color: '#333' }}>{field.label}</span>
+                        </div>
+                    ) : (
+                        <input
+                            type={field.type}
+                            placeholder={field.placeholder}
+                            value={cableData[field.label] || ""}
+                            onChange={(e) => handleChange(field.label, e.target.value)}
+                            style={{
+                                border: '2px solid #e0e0e0', borderRadius: '10px', width: '100%',
+                                backgroundColor: '#f9f9f9', padding: '12px', color: '#333',
+                                fontWeight: 'bold', fontFamily: 'Averia Serif Libre'
+                            }}
+                        />
+                    )}
+                </div>
+            ))}
+
+            <style>{`
+                @media (max-width: 768px) {
+                    div {
+                        grid-template-columns: 1fr !important;
+                    }
+                }
+            `}</style>
+        </div>
+    );
+}
