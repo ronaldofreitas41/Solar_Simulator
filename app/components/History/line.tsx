@@ -5,7 +5,7 @@ type Props = {
     text: String;
 }
 
-export const Line: React.FC<Props> = ({ id, text }) => {
+const Line: React.FC<Props> = ({ id, text }) => {
 
     return (
         <div style={{ display: "flex", alignItems: "center" }}>

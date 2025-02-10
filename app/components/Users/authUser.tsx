@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import BlueButton from "../Common/blueButton";
 import WhiteButton from "../Common/whiteButton";
 
-export const AuthUser = () => {
+const AuthUser = () => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');

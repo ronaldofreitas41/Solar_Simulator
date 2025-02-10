@@ -82,8 +82,19 @@ const MapComponent: React.FC<MapComponentProps> = ({ onLocationChange }) => {
     if (!isLoaded) return <p>Carregando mapa...</p>;
 
     return (
-        <div style={{ height: '100vh', width: '100%', position: 'relative' }}>
-            <form onSubmit={handleSearch} style={{ position: 'absolute', top: '20px', left: '20px', zIndex: 10, marginLeft: '30%' }}>
+        <div style={{ height: '135%', width: '100%', position: 'relative' }}>
+            <form
+                onSubmit={handleSearch}
+                style={{
+                    position: 'absolute',
+                    top: '20px',
+                    left: '20px',
+                    zIndex: 10,
+                    marginLeft: '30%',
+                    display: 'flex', // Adiciona flexbox para alinhar os itens
+                    alignItems: 'center', // Centraliza verticalmente
+                }}
+            >
                 <input
                     ref={autocompleteInputRef}
                     type="text"
@@ -94,23 +105,30 @@ const MapComponent: React.FC<MapComponentProps> = ({ onLocationChange }) => {
                         color: 'black',
                         padding: '10px',
                         backgroundColor: 'white',
-                        borderRadius: '30px 0 0 30px',
-                        // border: '1px solid #ccc',
+                        borderRadius: '30px 0 0 30px', // Borda arredondada apenas à esquerda
+                        border: '1px solid #ccc', // Adiciona borda para melhor visualização
                         width: '300px',
+                        height: '40px', // Altura fixa para alinhar com o botão
+                        outline: 'none', // Remove o contorno ao focar
                     }}
                 />
                 <button
                     type="submit"
                     style={{
-                        marginLeft: '0',
-                        padding: '10px',
+                        padding: '10px 15px', // Ajuste do padding para melhor proporção
                         backgroundColor: '#fff',
                         color: 'white',
-                        borderRadius: '0 30px 30px 0',
-                        border: 'none',
+                        borderRadius: '0 30px 30px 0', // Borda arredondada apenas à direita
+                        border: '1px solid #ccc', // Adiciona borda para combinar com o input
+                        borderLeft: 'none', // Remove a borda esquerda para unir com o input
+                        height: '40px', // Altura fixa para alinhar com o input
+                        cursor: 'pointer', // Adiciona cursor pointer para indicar que é clicável
+                        display: 'flex', // Flexbox para centralizar o ícone
+                        alignItems: 'center', // Centraliza verticalmente
+                        justifyContent: 'center', // Centraliza horizontalmente
                     }}
                 >
-                    <FaSearch style={{ color: '#000', height: '30px' }} />
+                    <FaSearch style={{ color: '#000', height: '20px', width: '20px' }} />
                 </button>
             </form>
             <GoogleMap

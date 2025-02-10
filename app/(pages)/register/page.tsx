@@ -2,7 +2,7 @@
 
 import { AddUser } from "@/app/components/Users/addUser";
 
-export const RegisterPage = () => {
+const RegisterPage = () => {
 
     return (
         <AddUser />

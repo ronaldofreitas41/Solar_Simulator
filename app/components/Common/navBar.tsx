@@ -18,7 +18,7 @@ export const NavBar: React.FC<Props> = ({ usertype }) => {
             boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
             position: 'fixed',
             width: '100%',
-            height:'70px',
+            height: '70px',
             zIndex: 50
         }}>
             <img
@@ -34,7 +34,8 @@ export const NavBar: React.FC<Props> = ({ usertype }) => {
                 <HeaderItem text="Home" href="/" />
                 <HeaderItem text="Histórico" href="/historico" />
                 <HeaderItem text="Suporte" href="/suporte" />
-                <HeaderItem text="Simular" href="/simular" />
+                {usertype === 'consumidor' && <HeaderItem id="Simular" text="Simular" href="/simular" />}
+                {usertype === 'fornecedor' && <HeaderItem id="Cadastrar" text="Cadastrar" href="/cadastrar" />}
                 <HeaderItem text="Contato" href="/contato" />
                 <HeaderItem text="Login" href="/login" />
             </nav>

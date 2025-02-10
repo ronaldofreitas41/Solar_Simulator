@@ -5,7 +5,7 @@ type Props = {
     onClick?: () => void;
 }
 
-export const BlueButton: React.FC<Props> = ({ text, onClick }) => {
+const BlueButton: React.FC<Props> = ({ text, onClick }) => {
     return (
         <button
             style={{

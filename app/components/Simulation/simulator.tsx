@@ -6,7 +6,7 @@ import { NavBar } from "../Common/navBar";
 import BlueButton from "../Common/blueButton";
 
 const Simulator = () => {
-    const usertyp = 'admin';
+    const usertyp = 'fornecedor';
     const [localizacao, setLocalizacao] = useState('Localização');
     const [consumo, setConsumo] = useState('Consumo');
     const [selectedOption, setSelectedOption] = useState('Doméstico');
@@ -139,7 +139,7 @@ const Simulator = () => {
                     style={{
                         backgroundColor: '#fff',
                         width: '30%',
-                        height: '100%',
+                        height: '135%',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
@@ -241,7 +241,13 @@ const Simulator = () => {
                         Consumo Elétrico
                     </p>
 
-                    <div style={{ alignSelf: 'flex-start', marginBottom: '20px' }}>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '15px',
+                        alignSelf: 'flex-start',
+                        marginBottom: '20px',
+                    }}>
                         <label style={{ marginRight: '25px' }}>
                             <input type="radio"
                                 name="consumo"
