@@ -1,12 +1,28 @@
 // NavBar Component
-import React from 'react';
+'use client';
+import React, { useEffect, useState } from 'react';
 import HeaderItem from './headeritem';
 
-interface Props {
-    usertype: string;
-}
 
-export const NavBar: React.FC<Props> = ({ usertype }) => {
+
+export const NavBar = () => {
+    const [userData, setUserData] = useState(null);
+    const [userType, setUserType] = useState('');
+
+    useEffect(() => {
+        console.log("useEffect executed");
+        const data = localStorage.getItem('UserData');
+        if (data) {
+            const parsedData = JSON.parse(data);
+            setUserData(parsedData);
+            setUserType(parsedData.type);
+            console.log("User Type", parsedData.type);
+            console.log("User Data: ", parsedData);
+        } else {
+            console.log("No user data found in sessionStorage");
+        }
+    }, []);
+
     return (
         <div style={{
             backgroundColor: '#0D3048',
@@ -34,11 +50,14 @@ export const NavBar: React.FC<Props> = ({ usertype }) => {
                 <HeaderItem text="Home" href="/" />
                 <HeaderItem text="Histórico" href="/historico" />
                 <HeaderItem text="Suporte" href="/suporte" />
-                {usertype === 'consumidor' && <HeaderItem id="Simular" text="Simular" href="/simular" />}
-                {usertype === 'fornecedor' && <HeaderItem id="Cadastrar" text="Cadastrar" href="/cadastrar" />}
+                {userType === 'Consumidor' && <HeaderItem id="Simular" text="Simular" href="/simular" />}
+                {userType === 'Fornecedor' && <HeaderItem id="Cadastrar" text="Cadastrar" href="/cadastrar" />}
                 <HeaderItem text="Contato" href="/contato" />
-                <HeaderItem text="Login" href="/login" />
+                {!userType && <HeaderItem text="Login" href="/login" />}
+                {userType && <HeaderItem text="Logout" href="/login" />}
             </nav>
         </div>
     );
 };
+
+export default NavBar;

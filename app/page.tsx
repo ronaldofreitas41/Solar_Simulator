@@ -1,4 +1,5 @@
-import React from 'react';
+'use client';
+import React, { useEffect, useState } from 'react';
 import { NavBar } from './components/Common/navBar';
 import YellowLine from './components/Common/yellowLine';
 import { BiStats } from "react-icons/bi";
@@ -6,11 +7,11 @@ import { FaCalculator } from 'react-icons/fa6';
 import { FaHistory } from 'react-icons/fa';
 
 export default function Home() {
-  const usertyp = 'admin';
+
 
   return (
     <div style={{ position: 'relative', width: '100%', minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
-      <NavBar usertype={usertyp} />
+      <NavBar/>
       <YellowLine />
 
       {/* Hero Section */}

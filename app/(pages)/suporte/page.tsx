@@ -1,12 +1,11 @@
-import  { NavBar } from "@/app/components/Common/navBar";
+import { NavBar } from "@/app/components/Common/navBar";
 import YellowLine from "@/app/components/Common/yellowLine";
 import React from "react";
 
 export default function page() {
-
     return (
         <body>
-            <NavBar usertype="user" />
+            <NavBar />
             <YellowLine />
             <div
                 style={{
@@ -54,7 +53,7 @@ export default function page() {
                                 display: 'block',
                                 marginBottom: '10px',
                                 color: '#000'
-                                
+
                             }}>
                                 Conteúdo do E-mail:
                                 <textarea style={{

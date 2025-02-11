@@ -15,7 +15,6 @@ export default function CadastroProdutos() {
     const [descricao, setDescricao] = useState('');
     const [quantidade, setQuantidade] = useState('');
     const [preco, setPreco] = useState('');
-
     const categorias = [
         { value: 'Cabos', icon: <FaBolt size={24} style={{ color: '#000' }} /> },
         { value: 'Controladores', icon: <FaCogs size={24} style={{ color: '#000' }} /> },
@@ -31,18 +30,14 @@ export default function CadastroProdutos() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                nome: nomeProduto,
-                descricao: descricao,
-                quantidade: quantidade,
-                preco: preco,
-                categoria: selectedCategoria,
+                
             })
         });
     }
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', backgroundColor: '#f7f7f7', minHeight: '100vh' }}>
-            <NavBar usertype='fornecedor' />
+            <NavBar/>
             <div style={{
                 display: 'flex',
                 marginTop: '70px',

@@ -6,7 +6,6 @@ import { NavBar } from "../Common/navBar";
 import BlueButton from "../Common/blueButton";
 
 const Simulator = () => {
-    const usertyp = 'fornecedor';
     const [localizacao, setLocalizacao] = useState('Localização');
     const [consumo, setConsumo] = useState('Consumo');
     const [selectedOption, setSelectedOption] = useState('Doméstico');
@@ -133,7 +132,7 @@ const Simulator = () => {
     }
     return (
         <div style={{ display: 'flex', flexDirection: 'column', backgroundColor: '#f7f7f7', minHeight: '100vh' }}>
-            <NavBar usertype={usertyp} />
+            <NavBar/>
             <div style={{ display: 'flex', marginTop: '70px', height: 'calc(100vh - 70px)' }}>
                 <div
                     style={{

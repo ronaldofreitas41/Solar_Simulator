@@ -5,6 +5,7 @@ import BlueCard from "@/app/components/History/blueCard";
 import React from "react";
 
 export default function Home() {
+
   const historyData = [
     {
       id: 1,
@@ -63,7 +64,7 @@ export default function Home() {
   ];
   return (
     <div>
-      <NavBar usertype="none" />
+      <NavBar/>
       <YellowLine />
       <div
         style={{
