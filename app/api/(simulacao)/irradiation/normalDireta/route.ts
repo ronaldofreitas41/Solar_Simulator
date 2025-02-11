@@ -1,8 +1,10 @@
+import cors, { runMiddleware } from "@/app/api/middleware";
 import { database } from "@/app/services/firebaseClient";
 import { child, get, push, ref, set } from "firebase/database";
 import { NextResponse, NextRequest } from "next/server";
-
 export async function GET(request: NextRequest) {
+    const response = NextResponse.next();
+    await runMiddleware(request, response, cors);
     try {
         const dbRef = ref(database);
         const snapshot = await get(child(dbRef, 'NormalDireta'));
