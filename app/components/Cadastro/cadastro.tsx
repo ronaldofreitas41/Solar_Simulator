@@ -40,7 +40,7 @@ export default function CadastroProdutos() {
             preco: preco,
             categoria: selectedCategoria,
         };
-
+        console.log("cableData: ", cableData);
         // Adicione os dados específicos de acordo com a categoria selecionada
         switch (selectedCategoria) {
             case 'Cabos':
@@ -57,7 +57,7 @@ export default function CadastroProdutos() {
                 break;
             case 'Controladores':
                 body = { ...body, ...controllerData };
-                url = 'controladores';
+                url = 'controlador';
                 break;
             case 'Placas':
                 body = { ...body, ...plateData };

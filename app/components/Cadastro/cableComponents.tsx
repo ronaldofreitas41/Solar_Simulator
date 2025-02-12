@@ -2,17 +2,10 @@
 import { useState, useEffect } from 'react';
 
 const cableFields = [
-    { label: "Seção nominal (bitola)", type: "text", placeholder: "Ex: 4mm²" },
-    { label: "Material do condutor", type: "text", placeholder: "Ex: Cobre estanhado" },
-    { label: "Material do isolamento", type: "text", placeholder: "Ex: XLPE" },
-    { label: "Tensão nominal", type: "text", placeholder: "Ex: 450/750V" },
-    { label: "Temperatura máxima de operação", type: "text", placeholder: "Ex: 90°C" },
-    { label: "Resistência UV", type: "checkbox" },
-    { label: "Resistência ao óleo e produtos químicos", type: "checkbox" },
-    { label: "Número de condutores", type: "number", placeholder: "Ex: 1, 2, 3, 4" },
+    { label: "Bitola", type: "text", placeholder: "Ex: 4mm²" },
+    { label: "Condutor", type: "text", placeholder: "Ex: Cobre estanhado" },
     { label: "Cor da capa externa", type: "text", placeholder: "Ex: Preto" },
     { label: "Blindagem", type: "text", placeholder: "Ex: Trançado de cobre" },
-    { label: "Normas aplicáveis", type: "text", placeholder: "Ex: ABNT NBR 16612" },
     { label: "Comprimento do rolo/pacote", type: "number", placeholder: "Ex: 100m" }
 ];
 
@@ -20,11 +13,20 @@ interface Props {
     setCableData: (data: { [key: string]: any }) => void;
 }
 
+const toCamelCase = (str: string) => {
+    return str
+        .normalize('NFD') // Decompor caracteres acentuados
+        .replace(/[\u0300-\u036f]/g, '') // Remover diacríticos
+        .toLowerCase()
+        .replace(/[^a-zA-Z0-9]+(.)/g, (match, chr) => chr.toUpperCase());
+};
+
 export default function CableComponents({ setCableData }: Props) {
     const [localCableData, setLocalCableData] = useState<{ [key: string]: any }>({});
 
     const handleChange = (field: string, value: any) => {
-        setLocalCableData((prev) => ({ ...prev, [field]: value }));
+        const camelCaseField = toCamelCase(field.trim());
+        setLocalCableData((prev) => ({ ...prev, [camelCaseField]: value }));
     };
 
     useEffect(() => {
@@ -48,7 +50,7 @@ export default function CableComponents({ setCableData }: Props) {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                             <input
                                 type="checkbox"
-                                checked={!!localCableData[field.label]}
+                                checked={!!localCableData[toCamelCase(field.label)]}
                                 onChange={(e) => handleChange(field.label, e.target.checked)}
                                 style={{ accentColor: '#333', transform: 'scale(1.2)' }}
                             />
@@ -58,7 +60,7 @@ export default function CableComponents({ setCableData }: Props) {
                         <input
                             type={field.type}
                             placeholder={field.placeholder}
-                            value={localCableData[field.label] || ""}
+                            value={localCableData[toCamelCase(field.label)] || ""}
                             onChange={(e) => handleChange(field.label, e.target.value)}
                             style={{
                                 border: '2px solid #e0e0e0', borderRadius: '10px', width: '100%',

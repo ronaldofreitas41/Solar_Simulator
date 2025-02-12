@@ -6,7 +6,6 @@ const structureFields = [
     { label: "Inclinação Ajustável", type: "text", placeholder: "Sim (15° a 45°)" },
     { label: "Capacidade de Painéis", type: "text", placeholder: "Até 4 placas de 500W" },
     { label: "Resistência ao Vento", type: "text", placeholder: "Até 150 km/h" },
-    { label: "Resistência à Corrosão", type: "text", placeholder: "Sim, ISO 9227" },
     { label: "Tipo de Fixação", type: "text", placeholder: "Solo / Telhado / Parede" },
     { label: "Vida Útil", type: "text", placeholder: "25 Anos" },
     { label: "Peso", type: "text", placeholder: "10kg" },
@@ -17,11 +16,20 @@ interface Props {
     setStructureData: (data: { [key: string]: any }) => void;
 }
 
+const toCamelCase = (str: string) => {
+    return str
+        .normalize('NFD') // Decompor caracteres acentuados
+        .replace(/[\u0300-\u036f]/g, '') // Remover diacríticos
+        .toLowerCase()
+        .replace(/[^a-zA-Z0-9]+(.)/g, (match, chr) => chr.toUpperCase());
+};
+
 export default function StructureComponents({ setStructureData }: Props) {
     const [structureData, setLocalStructureData] = useState<{ [key: string]: any }>({});
 
     const handleChange = (field: string, value: any) => {
-        setLocalStructureData((prev) => ({ ...prev, [field]: value }));
+        const camelCaseField = toCamelCase(field.trim());
+        setLocalStructureData((prev) => ({ ...prev, [camelCaseField]: value }));
     };
 
     useEffect(() => {
@@ -45,7 +53,7 @@ export default function StructureComponents({ setStructureData }: Props) {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                             <input
                                 type="checkbox"
-                                checked={!!structureData[field.label]}
+                                checked={!!structureData[toCamelCase(field.label)]}
                                 onChange={(e) => handleChange(field.label, e.target.checked)}
                                 style={{ accentColor: '#333', transform: 'scale(1.2)' }}
                             />
@@ -55,7 +63,7 @@ export default function StructureComponents({ setStructureData }: Props) {
                         <input
                             type={field.type}
                             placeholder={field.placeholder}
-                            value={structureData[field.label] || ""}
+                            value={structureData[toCamelCase(field.label)] || ""}
                             onChange={(e) => handleChange(field.label, e.target.value)}
                             style={{
                                 border: '2px solid #e0e0e0', borderRadius: '10px', width: '100%',

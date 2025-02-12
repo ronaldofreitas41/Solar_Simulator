@@ -4,31 +4,32 @@ import { useState, useEffect } from 'react';
 const inverterFields = [
     { label: "Potência de Saída Nominal", type: "text", placeholder: "3000W" },
     { label: "Tensão de Saída", type: "text", placeholder: "220V" },
-    { label: "Frequência de Saída", type: "text", placeholder: "60Hz" },
     { label: "Tipo de Onda", type: "text", placeholder: "Senoidal Pura" },
-    { label: "Eficiência Máxima", type: "text", placeholder: "97.5%" },
     { label: "Tensão do Banco de Baterias", type: "text", placeholder: "24V" },
-    { label: "Corrente Máxima de Entrada", type: "text", placeholder: "50A" },
     { label: "Tensão Máxima de Entrada (Placa Solar)", type: "text", placeholder: "80V" },
     { label: "Potência Máxima de Entrada (Placa Solar)", type: "text", placeholder: "2000W" },
     { label: "Modo de Operação", type: "text", placeholder: "Off-grid / Híbrido / On-grid" },
     { label: "Vida Útil Estimada", type: "text", placeholder: "15 Anos" },
-    { label: "Garantia", type: "text", placeholder: "3 Anos" },
-    { label: "Proteções Integradas", type: "text", placeholder: "Sobrecarga, Curto-circuito, Alta temperatura" },
-    { label: "Interface de Comunicação", type: "text", placeholder: "Wi-Fi / RS485 / Bluetooth" },
-    { label: "Peso", type: "text", placeholder: "12kg" },
-    { label: "Dimensões", type: "text", placeholder: "450mm x 350mm x 150mm" },
 ];
 
 interface Props {
     setInversorData: (data: { [key: string]: any }) => void;
 }
 
+const toCamelCase = (str: string) => {
+    return str
+        .normalize('NFD') // Decompor caracteres acentuados
+        .replace(/[\u0300-\u036f]/g, '') // Remover diacríticos
+        .toLowerCase()
+        .replace(/[^a-zA-Z0-9]+(.)/g, (match, chr) => chr.toUpperCase());
+};
+
 export default function InversorComponents({ setInversorData }: Props) {
     const [inversorData, setLocalInversorData] = useState<{ [key: string]: any }>({});
 
     const handleChange = (field: string, value: any) => {
-        setLocalInversorData((prev) => ({ ...prev, [field]: value }));
+        const camelCaseField = toCamelCase(field.trim());
+        setLocalInversorData((prev) => ({ ...prev, [camelCaseField]: value }));
     };
 
     useEffect(() => {
@@ -52,7 +53,7 @@ export default function InversorComponents({ setInversorData }: Props) {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                             <input
                                 type="checkbox"
-                                checked={!!inversorData[field.label]}
+                                checked={!!inversorData[toCamelCase(field.label)]}
                                 onChange={(e) => handleChange(field.label, e.target.checked)}
                                 style={{ accentColor: '#333', transform: 'scale(1.2)' }}
                             />
@@ -62,7 +63,7 @@ export default function InversorComponents({ setInversorData }: Props) {
                         <input
                             type={field.type}
                             placeholder={field.placeholder}
-                            value={inversorData[field.label] || ""}
+                            value={inversorData[toCamelCase(field.label)] || ""}
                             onChange={(e) => handleChange(field.label, e.target.value)}
                             style={{
                                 border: '2px solid #e0e0e0', borderRadius: '10px', width: '100%',
