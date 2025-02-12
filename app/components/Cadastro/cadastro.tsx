@@ -15,6 +15,15 @@ export default function CadastroProdutos() {
     const [descricao, setDescricao] = useState('');
     const [quantidade, setQuantidade] = useState('');
     const [preco, setPreco] = useState('');
+    let url = '';
+
+    // Estados específicos para cada tipo de equipamento
+    const [cableData, setCableData] = useState({});
+    const [inversorData, setInversorData] = useState({});
+    const [structureData, setStructureData] = useState({});
+    const [controllerData, setControllerData] = useState({});
+    const [plateData, setPlateData] = useState({});
+
     const categorias = [
         { value: 'Cabos', icon: <FaBolt size={24} style={{ color: '#000' }} /> },
         { value: 'Controladores', icon: <FaCogs size={24} style={{ color: '#000' }} /> },
@@ -23,21 +32,54 @@ export default function CadastroProdutos() {
         { value: 'Placas', icon: <FaSolarPanel size={24} style={{ color: '#000' }} /> }
     ];
 
-    async function salvar(){
-        fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/produtos`, {
+    async function salvar() {
+        let body = {
+            nome: nomeProduto,
+            descricao: descricao,
+            quantidade: quantidade,
+            preco: preco,
+            categoria: selectedCategoria,
+        };
+
+        // Adicione os dados específicos de acordo com a categoria selecionada
+        switch (selectedCategoria) {
+            case 'Cabos':
+                body = { ...body, ...cableData };
+                url = 'cabos';
+                break;
+            case 'Inversores':
+                body = { ...body, ...inversorData };
+                url = 'inversores';
+                break;
+            case 'Estruturas':
+                body = { ...body, ...structureData };
+                url = 'estrutura';
+                break;
+            case 'Controladores':
+                body = { ...body, ...controllerData };
+                url = 'controladores';
+                break;
+            case 'Placas':
+                body = { ...body, ...plateData };
+                url = 'plates';
+                break;
+            default:
+                break;
+        }
+
+        console.log("Body: ", JSON.stringify(body));
+        fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/${url}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                
-            })
+            body: JSON.stringify(body)
         });
     }
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', backgroundColor: '#f7f7f7', minHeight: '100vh' }}>
-            <NavBar/>
+            <NavBar />
             <div style={{
                 display: 'flex',
                 marginTop: '70px',
@@ -138,19 +180,19 @@ export default function CadastroProdutos() {
                         }}
                     />
                     {selectedCategoria === 'Cabos' && (
-                        <CableComponents />
+                        <CableComponents setCableData={setCableData} />
                     )}
                     {selectedCategoria === 'Inversores' && (
-                        <InversorComponents />
+                        <InversorComponents setInversorData={setInversorData} />
                     )}
                     {selectedCategoria === 'Estruturas' && (
-                        <StructureComponents />
+                        <StructureComponents setStructureData={setStructureData} />
                     )}
                     {selectedCategoria === 'Placas' && (
-                        <PlateComponents />
+                        <PlateComponents setPlateData={setPlateData} />
                     )}
                     {selectedCategoria === 'Controladores' && (
-                        <ControllerComponents />
+                        <ControllerComponents setControllerData={setControllerData} />
                     )}
                     {/* Descrição */}
                     <p style={{

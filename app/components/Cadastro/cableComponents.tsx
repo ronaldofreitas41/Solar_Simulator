@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const cableFields = [
     { label: "Seção nominal (bitola)", type: "text", placeholder: "Ex: 4mm²" },
@@ -16,12 +16,20 @@ const cableFields = [
     { label: "Comprimento do rolo/pacote", type: "number", placeholder: "Ex: 100m" }
 ];
 
-export default function CableComponents() {
-    const [cableData, setCableData] = useState<{ [key: string]: any }>({});
+interface Props {
+    setCableData: (data: { [key: string]: any }) => void;
+}
+
+export default function CableComponents({ setCableData }: Props) {
+    const [localCableData, setLocalCableData] = useState<{ [key: string]: any }>({});
 
     const handleChange = (field: string, value: any) => {
-        setCableData((prev) => ({ ...prev, [field]: value }));
+        setLocalCableData((prev) => ({ ...prev, [field]: value }));
     };
+
+    useEffect(() => {
+        setCableData(localCableData);
+    }, [localCableData, setCableData]);
 
     return (
         <div style={{
@@ -40,7 +48,7 @@ export default function CableComponents() {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                             <input
                                 type="checkbox"
-                                checked={!!cableData[field.label]}
+                                checked={!!localCableData[field.label]}
                                 onChange={(e) => handleChange(field.label, e.target.checked)}
                                 style={{ accentColor: '#333', transform: 'scale(1.2)' }}
                             />
@@ -50,7 +58,7 @@ export default function CableComponents() {
                         <input
                             type={field.type}
                             placeholder={field.placeholder}
-                            value={cableData[field.label] || ""}
+                            value={localCableData[field.label] || ""}
                             onChange={(e) => handleChange(field.label, e.target.value)}
                             style={{
                                 border: '2px solid #e0e0e0', borderRadius: '10px', width: '100%',

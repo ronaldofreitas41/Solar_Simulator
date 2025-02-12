@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const solarPanelFields = [
     { label: "Potência Nominal", type: "text", placeholder: "450W" },
@@ -15,13 +15,20 @@ const solarPanelFields = [
     { label: "Garantia", type: "text", placeholder: "10 Anos (Produto) / 25 Anos (Eficiência)" },
 ];
 
+interface Props {
+    setPlateData: (data: { [key: string]: any }) => void;
+}
 
-export default function PlateComponents() {
-    const [cableData, setCableData] = useState<{ [key: string]: any }>({});
+export default function PlateComponents({ setPlateData }: Props) {
+    const [plateData, setLocalPlateData] = useState<{ [key: string]: any }>({});
 
     const handleChange = (field: string, value: any) => {
-        setCableData((prev) => ({ ...prev, [field]: value }));
+        setLocalPlateData((prev) => ({ ...prev, [field]: value }));
     };
+
+    useEffect(() => {
+        setPlateData(plateData);
+    }, [plateData, setPlateData]);
 
     return (
         <div style={{
@@ -40,7 +47,7 @@ export default function PlateComponents() {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                             <input
                                 type="checkbox"
-                                checked={!!cableData[field.label]}
+                                checked={!!plateData[field.label]}
                                 onChange={(e) => handleChange(field.label, e.target.checked)}
                                 style={{ accentColor: '#333', transform: 'scale(1.2)' }}
                             />
@@ -50,7 +57,7 @@ export default function PlateComponents() {
                         <input
                             type={field.type}
                             placeholder={field.placeholder}
-                            value={cableData[field.label] || ""}
+                            value={plateData[field.label] || ""}
                             onChange={(e) => handleChange(field.label, e.target.value)}
                             style={{
                                 border: '2px solid #e0e0e0', borderRadius: '10px', width: '100%',

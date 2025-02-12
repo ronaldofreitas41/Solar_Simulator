@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const inverterFields = [
     { label: "Potência de Saída Nominal", type: "text", placeholder: "3000W" },
@@ -20,13 +20,20 @@ const inverterFields = [
     { label: "Dimensões", type: "text", placeholder: "450mm x 350mm x 150mm" },
 ];
 
+interface Props {
+    setInversorData: (data: { [key: string]: any }) => void;
+}
 
-export default function InversorComponents() {
-    const [cableData, setCableData] = useState<{ [key: string]: any }>({});
+export default function InversorComponents({ setInversorData }: Props) {
+    const [inversorData, setLocalInversorData] = useState<{ [key: string]: any }>({});
 
     const handleChange = (field: string, value: any) => {
-        setCableData((prev) => ({ ...prev, [field]: value }));
+        setLocalInversorData((prev) => ({ ...prev, [field]: value }));
     };
+
+    useEffect(() => {
+        setInversorData(inversorData);
+    }, [inversorData, setInversorData]);
 
     return (
         <div style={{
@@ -45,7 +52,7 @@ export default function InversorComponents() {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                             <input
                                 type="checkbox"
-                                checked={!!cableData[field.label]}
+                                checked={!!inversorData[field.label]}
                                 onChange={(e) => handleChange(field.label, e.target.checked)}
                                 style={{ accentColor: '#333', transform: 'scale(1.2)' }}
                             />
@@ -55,7 +62,7 @@ export default function InversorComponents() {
                         <input
                             type={field.type}
                             placeholder={field.placeholder}
-                            value={cableData[field.label] || ""}
+                            value={inversorData[field.label] || ""}
                             onChange={(e) => handleChange(field.label, e.target.value)}
                             style={{
                                 border: '2px solid #e0e0e0', borderRadius: '10px', width: '100%',

@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const controllerFields = [
     { label: "Corrente Nominal", type: "text", placeholder: "30A" },
@@ -16,13 +16,20 @@ const controllerFields = [
     { label: "Peso", type: "text", placeholder: "1.2kg" },
 ];
 
+interface Props {
+    setControllerData: (data: { [key: string]: any }) => void;
+}
 
-export default function ControllerComponents() {
-    const [cableData, setCableData] = useState<{ [key: string]: any }>({});
+export default function ControllerComponents({ setControllerData }: Props) {
+    const [controllerData, setLocalControllerData] = useState<{ [key: string]: any }>({});
 
     const handleChange = (field: string, value: any) => {
-        setCableData((prev) => ({ ...prev, [field]: value }));
+        setLocalControllerData((prev) => ({ ...prev, [field]: value }));
     };
+
+    useEffect(() => {
+        setControllerData(controllerData);
+    }, [controllerData, setControllerData]);
 
     return (
         <div style={{
@@ -41,7 +48,7 @@ export default function ControllerComponents() {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                             <input
                                 type="checkbox"
-                                checked={!!cableData[field.label]}
+                                checked={!!controllerData[field.label]}
                                 onChange={(e) => handleChange(field.label, e.target.checked)}
                                 style={{ accentColor: '#333', transform: 'scale(1.2)' }}
                             />
@@ -51,7 +58,7 @@ export default function ControllerComponents() {
                         <input
                             type={field.type}
                             placeholder={field.placeholder}
-                            value={cableData[field.label] || ""}
+                            value={controllerData[field.label] || ""}
                             onChange={(e) => handleChange(field.label, e.target.value)}
                             style={{
                                 border: '2px solid #e0e0e0', borderRadius: '10px', width: '100%',
