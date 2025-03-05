@@ -60,13 +60,12 @@ export default function Home() {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '50px 10%', position: 'relative', zIndex: 2 }}>
         <div style={{ maxWidth: '600px' }}>
           <h2 style={{ color: '#0D3048', fontSize: '36px', fontWeight: 'bold' }}>Sobre o Solar Simulator</h2>
-          <p style={{ fontSize: '20px', textAlign: 'justify' }}>
+          <p style={{ fontSize: '20px',color:'#0D3048' , textAlign: 'justify' }}>
             Descubra como maximizar a eficiência da energia solar! Nossa plataforma inovadora permite simular diferentes cenários climáticos e geográficos para otimizar a captação de luz e prever a produção de energia com precisão.
           </p>
           <button style={{ marginTop: '20px', backgroundColor: '#FFC531', color: '#0D3048', fontWeight: 'bold', padding: '12px 24px', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>Saiba Mais</button>
         </div>
-        <img src="/images/placas.png" alt="Placas solares" style={{ width: '50%', maxWidth: '500px', borderRadius: '20px', boxShadow: '5px 5px 20px rgba(0, 0, 0, 0.3)' }} />
-      </div>
-    </div>
+        <img src="/images/placas.png" alt="Placas solares" style={{ width: '50%', maxWidth: '500px'}} />
+      </div>    </div>
   );
 }
