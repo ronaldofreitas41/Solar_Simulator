@@ -6,12 +6,9 @@ const solarPanelFields = [
     { label: "Eficiência do Painel", type: "text", placeholder: "21.5%" },
     { label: "Tensão de Operação (Vmp)", type: "text", placeholder: "38V" },
     { label: "Corrente de Operação (Imp)", type: "text", placeholder: "11.8A" },
-    { label: "Tensão em Circuito Aberto (Voc)", type: "text", placeholder: "45V" },
-    { label: "Corrente de Curto-Circuito (Isc)", type: "text", placeholder: "12.2A" },
     { label: "Tipo de Célula", type: "text", placeholder: "Monocristalino" },
     { label: "Dimensões", type: "text", placeholder: "2100mm x 1040mm x 35mm" },
     { label: "Peso", type: "text", placeholder: "25kg" },
-    { label: "Temperatura de Operação", type: "text", placeholder: "-40°C a 85°C" },
     { label: "Garantia", type: "text", placeholder: "10 Anos (Produto) / 25 Anos (Eficiência)" },
 ];
 
@@ -19,11 +16,20 @@ interface Props {
     setPlateData: (data: { [key: string]: any }) => void;
 }
 
+const toCamelCase = (str: string) => {
+    return str
+        .normalize('NFD') // Decompor caracteres acentuados
+        .replace(/[\u0300-\u036f]/g, '') // Remover diacríticos
+        .toLowerCase()
+        .replace(/[^a-zA-Z0-9]+(.)/g, (match, chr) => chr.toUpperCase());
+};
+
 export default function PlateComponents({ setPlateData }: Props) {
     const [plateData, setLocalPlateData] = useState<{ [key: string]: any }>({});
 
     const handleChange = (field: string, value: any) => {
-        setLocalPlateData((prev) => ({ ...prev, [field]: value }));
+        const camelCaseField = toCamelCase(field.trim());
+        setLocalPlateData((prev) => ({ ...prev, [camelCaseField]: value }));
     };
 
     useEffect(() => {
@@ -47,7 +53,7 @@ export default function PlateComponents({ setPlateData }: Props) {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                             <input
                                 type="checkbox"
-                                checked={!!plateData[field.label]}
+                                checked={!!plateData[toCamelCase(field.label)]}
                                 onChange={(e) => handleChange(field.label, e.target.checked)}
                                 style={{ accentColor: '#333', transform: 'scale(1.2)' }}
                             />
@@ -57,7 +63,7 @@ export default function PlateComponents({ setPlateData }: Props) {
                         <input
                             type={field.type}
                             placeholder={field.placeholder}
-                            value={plateData[field.label] || ""}
+                            value={plateData[toCamelCase(field.label)] || ""}
                             onChange={(e) => handleChange(field.label, e.target.value)}
                             style={{
                                 border: '2px solid #e0e0e0', borderRadius: '10px', width: '100%',

@@ -11,7 +11,9 @@ const Simulator = () => {
     const [selectedOption, setSelectedOption] = useState('Doméstico');
     const [selectedOption2, setSelectedOption2] = useState('Consumo Médio');
     const [area, setArea] = useState('Área');
+    let numeroPlacas = 0;
 
+    //Adicionando a localizaçao inicial ao carregar a página
     useEffect(() => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
@@ -23,17 +25,27 @@ const Simulator = () => {
         }
     }, []);
 
+    //Mudando a localização conforme a mesma for pesquisada
     const handleLocationChange = (location: string) => {
         setLocalizacao(location);
     };
 
+    /*
+        Função para Calcular custo beneficio das placas
+        @param plateData: Dados das placas
+        @return: Indice da placa com melhor custo beneficio
+    */
     function melhorCustoBeneficio(plateData: any) {
         let max = Number.MAX_VALUE;
         let bestIndex = -1;
 
         if (Array.isArray(plateData)) {
             plateData.forEach((e, index) => {
-                let cb = e.price / e.power;
+                let potenciaNominalf = parseFloat(e.potenciaNominal.split("W")[0]);
+                let eficienciaf = parseFloat(e.eficienciaDoPainel.split("%")[0]) / 100;
+                let potenciaUtil = potenciaNominalf * eficienciaf;
+                let cb = parseFloat(e.preco) / potenciaUtil;
+                console.log("Custo Beneficio: ",cb);
                 if (cb < max) {
                     max = cb;
                     bestIndex = index
@@ -46,6 +58,11 @@ const Simulator = () => {
         return bestIndex;
     }
 
+    /*
+     *Função para pegar as coordenadas da localização
+     *@param: Nenhum
+     *@return: Coordenadas da localização
+    */
     function getCoordenadas() {
         let labelLoc: string[] = localizacao.split(":");
         let lonLabel = parseFloat(labelLoc[2]);
@@ -57,30 +74,49 @@ const Simulator = () => {
         return cordenadas;
     }
 
+    /**
+     * Função para calcular a geração de energia e definir quantas placas são 
+     * necessárias para atender ao consumo
+     * @param: Nenhum
+     * @return: Nenhum
+     */
     async function calculaGeracao() {
         let plates = await getPlates();
         let irradiation = await getIrradiation();
+        let consumof = parseFloat(consumo);//OK testado
+        if (selectedOption2 == 'Consumo Anual') {
+            consumof = consumof / 12;
+        }
 
-        let plateData: any = Object.values(plates.data);
-        let irradiationData: any = Object.values(irradiation.data);
+        let plateData: any = Object.values(plates.data); //OK testado
+        let irradiationData: any = Object.values(irradiation.data); //OK testado
 
-        const coordenadas = getCoordenadas();
-        const bestPlateIndex = melhorCustoBeneficio(plateData);
+        const coordenadas = getCoordenadas();//OK testado
+        const bestPlateIndex = melhorCustoBeneficio(plateData); //OK testado
+        const bestPlate = plateData[bestPlateIndex]; //OK testado
 
         if (Array.isArray(irradiationData)) {
             irradiationData.forEach(e => {
                 if (Number(e.LAT.toFixed(1)) == coordenadas[0]) {
                     if (Number(e.LON.toFixed(1)) == coordenadas[1]) {
-                        let irradiacaoMedia = e.ANNUAL;
-                        let area = 2
-                        let potencia = 500
-                        let eficiencia = potencia / (1000 * area)
-                        console.log("Eficiencia do Painel: ", eficiencia);
-                        let geracaoPlaca = (irradiacaoMedia * area * eficiencia) / 1000;
-                        let geracaoPlacaMensal = geracaoPlaca * 30;
-                        let n = parseFloat(consumo) / geracaoPlacaMensal;
 
-                        alert('Em um sistema composto por placas com potencial de 500w em condições ideais com 80% de aproveitamento da geração na sua localização é necessário: ' + n + "placas");
+                        let irradiacaoMedia = e.ANNUAL/1000; // Irradiação média anual (kWh/m²/dia)
+                        let potencia = (parseFloat(bestPlate.potenciaNominal.split("W")[0]))/1000; // Potência em KW
+                        let eficiencia = parseFloat(bestPlate.eficienciaDoPainel.split("%")[0]) / 100; // Eficiência em decimal
+                        
+
+                        let geracaoPlaca = potencia * irradiacaoMedia * eficiencia;
+                        
+
+                        let geracaoPlacaMensal = geracaoPlaca * 30;
+                        
+                        let n = consumof / geracaoPlacaMensal;
+                        
+                        console.log("Geração diária por placa (kWh/dia): ", geracaoPlaca);
+                        console.log("Geração mensal por placa (kWh/mês): ", geracaoPlacaMensal);
+                        console.log("Número de placas necessárias: ", Math.ceil(n)); // Arredonda para cima
+
+                        alert('Em um sistema composto por placas com potencial de '+(potencia*1000)+' W em condições ideais com '+(eficiencia*100)+'% de aproveitamento da geração na sua localização é necessário: ' + n + "placas");
                         return;
                     }
                 }
@@ -88,6 +124,21 @@ const Simulator = () => {
         }
     }
 
+    /**
+     * Função para calcular o preço final do sistema
+     * @param: Nenhum
+     * @return: Nenhum
+     */
+    function calculaPreçoFinal() {
+
+    }
+
+
+    /**
+     * Função para pegar os dados de irradiação
+     * @param: Nenhum
+     * @return: Dados de irradiação
+     */
     async function getIrradiation() {
         let option = '';
         switch (selectedOption) {
@@ -118,6 +169,11 @@ const Simulator = () => {
         }
     }
 
+    /**
+     * Função para pegar as placas
+     * @param: Nenhum
+     * @return: Dados das placas
+     */
     async function getPlates() {
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/plates`, {
             method: 'GET',
@@ -130,9 +186,11 @@ const Simulator = () => {
             throw new Error('Sem Placas cadastradas');
         }
     }
+
+
     return (
         <div style={{ display: 'flex', flexDirection: 'column', backgroundColor: '#f7f7f7', minHeight: '100vh' }}>
-            <NavBar/>
+            <NavBar />
             <div style={{ display: 'flex', marginTop: '70px', height: 'calc(100vh - 70px)' }}>
                 <div
                     style={{

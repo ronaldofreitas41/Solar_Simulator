@@ -8,23 +8,26 @@ const controllerFields = [
     { label: "Eficiência Máxima", type: "text", placeholder: "98%" },
     { label: "Tensão Máxima de Entrada", type: "text", placeholder: "100V" },
     { label: "Capacidade Máxima de Painéis", type: "text", placeholder: "1000W" },
-    { label: "Modo de Carga", type: "text", placeholder: "Bulk, Absorção, Flutuação" },
-    { label: "Proteções", type: "text", placeholder: "Sobrecarga, Curto-circuito, Inversão de polaridade" },
-    { label: "Interface de Monitoramento", type: "text", placeholder: "LCD / Bluetooth / Wi-Fi" },
-    { label: "Temperatura de Operação", type: "text", placeholder: "-20°C a 50°C" },
-    { label: "Dimensões", type: "text", placeholder: "200mm x 150mm x 50mm" },
-    { label: "Peso", type: "text", placeholder: "1.2kg" },
 ];
 
 interface Props {
     setControllerData: (data: { [key: string]: any }) => void;
 }
 
+const toCamelCase = (str: string) => {
+    return str
+        .normalize('NFD') // Decompor caracteres acentuados
+        .replace(/[\u0300-\u036f]/g, '') // Remover diacríticos
+        .toLowerCase()
+        .replace(/[^a-zA-Z0-9]+(.)/g, (match, chr) => chr.toUpperCase());
+};
+
 export default function ControllerComponents({ setControllerData }: Props) {
     const [controllerData, setLocalControllerData] = useState<{ [key: string]: any }>({});
 
     const handleChange = (field: string, value: any) => {
-        setLocalControllerData((prev) => ({ ...prev, [field]: value }));
+        const camelCaseField = toCamelCase(field.trim());
+        setLocalControllerData((prev) => ({ ...prev, [camelCaseField]: value }));
     };
 
     useEffect(() => {
@@ -48,7 +51,7 @@ export default function ControllerComponents({ setControllerData }: Props) {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                             <input
                                 type="checkbox"
-                                checked={!!controllerData[field.label]}
+                                checked={!!controllerData[toCamelCase(field.label)]}
                                 onChange={(e) => handleChange(field.label, e.target.checked)}
                                 style={{ accentColor: '#333', transform: 'scale(1.2)' }}
                             />
@@ -58,7 +61,7 @@ export default function ControllerComponents({ setControllerData }: Props) {
                         <input
                             type={field.type}
                             placeholder={field.placeholder}
-                            value={controllerData[field.label] || ""}
+                            value={controllerData[toCamelCase(field.label)] || ""}
                             onChange={(e) => handleChange(field.label, e.target.value)}
                             style={{
                                 border: '2px solid #e0e0e0', borderRadius: '10px', width: '100%',

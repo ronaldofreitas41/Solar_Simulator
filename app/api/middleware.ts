@@ -1,22 +1,21 @@
-import { NextRequest, NextResponse } from 'next/server';
-import Cors from 'cors';
+import { NextRequest, NextResponse } from "next/server";
 
-const cors = Cors({
-    methods: ['GET', 'POST', 'OPTIONS'],
-    origin: '*', // Permite todas as origens, ajuste conforme necessário
-});
+export function middleware(req: NextRequest) {
+    const response = NextResponse.next();
 
-// Helper para executar middleware
-function runMiddleware(req: NextRequest, res: NextResponse, fn: Function) {
-    return new Promise((resolve, reject) => {
-        fn(req, res, (result: any) => {
-            if (result instanceof Error) {
-                return reject(result);
-            }
-            return resolve(result);
-        });
-    });
+    response.headers.set("Access-Control-Allow-Origin", "*");
+    response.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    response.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+    // Se a requisição for do tipo OPTIONS (preflight CORS), retorna uma resposta vazia com status 200
+    if (req.method === "OPTIONS") {
+        return new NextResponse(null, { status: 200, headers: response.headers });
+    }
+
+    return response;
 }
 
-export default cors;
-export { runMiddleware };
+// Configurações para definir quais rotas o middleware deve ser aplicado
+export const config = {
+    matcher: "/api/:path*", // Aplica o middleware a todas as rotas dentro de /api
+};

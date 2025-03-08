@@ -115,7 +115,7 @@ const AuthUser = () => {
                                 borderRadius: "4px",
                                 color: '#000'
                             }}
-                            onChange={event => setEmail(event.target.value)}
+                            onChange={event => setEmail(event.target.value)}    
                         />
                         <input
                             type="password"
