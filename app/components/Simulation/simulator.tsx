@@ -12,6 +12,8 @@ const Simulator = () => {
     const [selectedOption2, setSelectedOption2] = useState('Consumo Médio');
     const [area, setArea] = useState('Área');
     let numeroPlacas = 0;
+    const [geracao, setGeracao] = useState(0);
+
 
     //Adicionando a localizaçao inicial ao carregar a página
     useEffect(() => {
@@ -45,7 +47,6 @@ const Simulator = () => {
                 let eficienciaf = parseFloat(e.eficienciaDoPainel.split("%")[0]) / 100;
                 let potenciaUtil = potenciaNominalf * eficienciaf;
                 let cb = parseFloat(e.preco) / potenciaUtil;
-                console.log("Custo Beneficio: ",cb);
                 if (cb < max) {
                     max = cb;
                     bestIndex = index
@@ -102,26 +103,175 @@ const Simulator = () => {
 
                         let irradiacaoMedia = e.ANNUAL/1000; // Irradiação média anual (kWh/m²/dia)
                         let potencia = (parseFloat(bestPlate.potenciaNominal.split("W")[0]))/1000; // Potência em KW
-                        let eficiencia = parseFloat(bestPlate.eficienciaDoPainel.split("%")[0]) / 100; // Eficiência em decimal
+                        let eficiencia = 1-(parseFloat(bestPlate.eficienciaDoPainel.split("%")[0]) / 100); // Eficiência em decimal
                         
 
                         let geracaoPlaca = potencia * irradiacaoMedia * eficiencia;
                         
-
                         let geracaoPlacaMensal = geracaoPlaca * 30;
                         
                         let n = consumof / geracaoPlacaMensal;
-                        
-                        console.log("Geração diária por placa (kWh/dia): ", geracaoPlaca);
-                        console.log("Geração mensal por placa (kWh/mês): ", geracaoPlacaMensal);
-                        console.log("Número de placas necessárias: ", Math.ceil(n)); // Arredonda para cima
+                        n = Math.max(Math.ceil(n), 1);
+                        const geracaoSistema = geracaoPlaca * n;
+                        setGeracao(geracaoSistema);
 
                         alert('Em um sistema composto por placas com potencial de '+(potencia*1000)+' W em condições ideais com '+(eficiencia*100)+'% de aproveitamento da geração na sua localização é necessário: ' + n + "placas");
                         return;
                     }
                 }
             });
+            
         }
+        
+       
+    }
+
+
+    /**
+     * Função para retornar melhor controlador em questão de preço
+     * @param: Nenhum
+     * @returns: Melhor Controlador 
+     */
+    async function escolheControlador(){
+        let controladores = await getControladores();
+        controladores = Object.values(controladores.data);
+        var quant = 0;
+        var custo = 0;
+        var min = Number.MAX_VALUE;
+        var index = 0;
+        var cb = 0;
+        
+        controladores.forEach((e:any,i:any) => {
+            var capacidadef = parseFloat(e.capacidadeMaximaDePaineis);
+            var capacidade = capacidadef*(parseFloat(e.eficienciaMaxima)/100);
+
+            if(capacidade > geracao){
+                console.log("if");
+                quant = 1;
+                custo = parseFloat(e.preco);
+                cb = custo/capacidade
+                console.log("Quantidade de controladores: ",quant);
+            }else{
+                console.log("else");
+                quant = capacidade/geracao;
+                quant = Math.max(Math.ceil(quant), 1);
+                custo = (quant * parseFloat(e.preco));
+                cb = custo/capacidade;
+                console.log("Quantidade de controladores: ",quant);
+            }
+
+            if(cb < min){
+                min = cb;
+                index = i;
+            }
+
+        });
+
+        return controladores[index];
+
+    }
+
+    /**
+     * Função para escolher o melhor inversor em questão de preço
+     * @param: Nenhum
+     * @returns: Melhor inversor 
+     */
+    async function escolheInversor(){
+        let inversores = await getInversores();
+        inversores = Object.values(inversores.data);
+        var quant = 0;
+        var custo = 0;
+        var min = Number.MAX_VALUE;
+        var index = 0;
+        var cb = 0;
+        var cbvu = 0;
+        
+        inversores.forEach((e:any,i:any) => {
+
+            var potencia = (parseFloat(e.potenciaMaximaDaPlaca.split("W")[0]));
+            var vidaUtil = parseFloat((e.vidaUtilEstimada.split("anos")[0]).split(" ")[0]);
+            cbvu = parseFloat(e.preco)/vidaUtil;
+            if(potencia > geracao){
+                console.log("if");
+                quant = 1;
+                custo = parseFloat(e.preco);
+                cb = custo/potencia
+                cb = cb + cbvu;
+                console.log("Quantidade de inversores: ",quant);
+            }else{
+                console.log("else");
+                quant = potencia/geracao;
+                quant = Math.max(Math.ceil(quant), 1);
+                custo = (quant * parseFloat(e.preco));
+                cb = custo/potencia;
+                cb = cb + cbvu;
+                console.log("Quantidade de inversores: ",quant);
+            }
+
+            if(cb < min){
+                min = cb;
+                index = i;
+            }
+
+        });
+
+        return inversores[index];
+    
+    }
+    
+    /**
+     * Função para retornar melhor Cabo em questão de preço
+     * @param: Nenhum
+     * @returns: Melhor cabo 
+     */
+    async function escolheCabo(){
+        let cabos = await getCabos();
+        cabos = Object.values(cabos.data);
+        var cb = 0;
+        var min = Number.MAX_VALUE;
+        var index = 0;
+
+        cabos.forEach((e:any,i:any) => {
+            var preco = parseFloat(e.preco);
+            var comprimento = parseFloat(e.comprimentoDoRoloPacote.split("m")[0]);
+            cb = preco/comprimento;
+
+            if(cb < min){
+                min = cb;
+                index = i;
+            }
+
+        });
+
+        return cabos[index];
+        
+    }
+
+    /**
+     * Função para retornar melhor Estrutura em questão de preço
+     * @param: Nenhumh
+     * @returns: Melhor cabo 
+     */
+    async function escolheEstrutura(){
+        let estruturas = await getEstruturas();
+        estruturas = Object.values(estruturas.data);
+        var cb = 0;
+        var min = Number.MAX_VALUE;
+        var index = 0;
+
+        estruturas.forEach((e:any,i:any) => {
+            var preco = parseFloat(e.preco);
+            var vd = parseFloat(e.peso);
+            cb = preco/vd;
+
+            if(cb < min){
+                min = cb;
+                index = i;
+            }
+
+        });
+
+        return estruturas[index];
     }
 
     /**
@@ -129,7 +279,7 @@ const Simulator = () => {
      * @param: Nenhum
      * @return: Nenhum
      */
-    function calculaPreçoFinal() {
+    async function calculaPreçoFinal() {
 
     }
 
@@ -156,7 +306,6 @@ const Simulator = () => {
                 break;
         }
         const url = `${process.env.NEXT_PUBLIC_BASE_URL_API}/irradiation/${option}`;
-        console.log("URL:", url);
         const res = await fetch(url, {
             method: 'GET',
         });
@@ -187,6 +336,78 @@ const Simulator = () => {
         }
     }
 
+    /**
+     * Função para buscar os dados dos controladores
+     * @param: Nenhum
+     * @return: Dados dos controladores
+     */
+    async function getControladores() {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/controlador`, {
+            method: 'GET',
+        });
+
+        if (res.ok) {
+            const controladoresData = await res.json();
+            return controladoresData;
+        } else {
+            throw new Error('Sem Controladores cadastrados');
+        }
+    }
+
+    /**
+     * Função para buscar os dados dos Inversores
+     * @param: Nenhum
+     * @return: Dados dos Inversores
+     */
+    async function getInversores() {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/inversores`, {
+            method: 'GET',
+        });
+
+        if (res.ok) {
+            const inversoresData = await res.json();
+            return inversoresData;
+        } else {
+            throw new Error('Sem Inversores cadastrados');
+        }
+    }
+
+    /**
+     * Função para buscar os dados dos Cabos
+     * @param: Nenhum
+     * @return: Dados dos Cabos
+     */
+    async function getCabos() {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cabos`, {
+            method: 'GET',
+        });
+
+        if (res.ok) {
+            const cabosData = await res.json();
+            return cabosData;
+        } else {
+            throw new Error('Sem Cabos cadastrados');
+        }
+    }
+
+    /**
+     * Função para buscar os dados das estruturas
+     * @param: Nenhum
+     * @return: Dados das estruturas
+     */
+
+    async function getEstruturas() {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/estrutura`, {
+            method: 'GET',
+        });
+
+        if (res.ok) {
+            const estruturasData = await res.json();
+            return estruturasData;
+        } else {
+            throw new Error('Sem Estruturas cadastradas');
+        }
+    }
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', backgroundColor: '#f7f7f7', minHeight: '100vh' }}>
