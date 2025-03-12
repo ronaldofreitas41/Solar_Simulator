@@ -137,7 +137,7 @@ const Simulator = () => {
             const caboo = await escolheCabo();
             setCabo(" x "+caboo.nome);
             const estruturaa = await escolheEstrutura();
-            setEstrutura(estruturaa);
+            setEstrutura("1 x " + estruturaa.nome);
             const res = await calculaGeracao();
             
             console.log("Placas: ", placa);
