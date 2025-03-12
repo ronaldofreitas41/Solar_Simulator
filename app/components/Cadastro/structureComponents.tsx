@@ -9,7 +9,6 @@ const structureFields = [
     { label: "Tipo de Fixação", type: "text", placeholder: "Solo / Telhado / Parede" },
     { label: "Vida Útil", type: "text", placeholder: "25 Anos" },
     { label: "Peso", type: "text", placeholder: "10kg" },
-    { label: "Dimensões", type: "text", placeholder: "Variável conforme instalação" },
 ];
 
 interface Props {

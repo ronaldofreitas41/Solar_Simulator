@@ -7,7 +7,7 @@ const solarPanelFields = [
     { label: "Tensão de Operação (Vmp)", type: "text", placeholder: "38V" },
     { label: "Corrente de Operação (Imp)", type: "text", placeholder: "11.8A" },
     { label: "Tipo de Célula", type: "text", placeholder: "Monocristalino" },
-    { label: "Dimensões", type: "text", placeholder: "2100mm x 1040mm x 35mm" },
+    { label: "Dimensões", type: "text", placeholder: "3m²" },
     { label: "Peso", type: "text", placeholder: "25kg" },
     { label: "Garantia", type: "text", placeholder: "10 Anos (Produto) / 25 Anos (Eficiência)" },
 ];

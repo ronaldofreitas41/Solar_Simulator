@@ -6,8 +6,8 @@ const inverterFields = [
     { label: "Tensão de Saída", type: "text", placeholder: "220V" },
     { label: "Tipo de Onda", type: "text", placeholder: "Senoidal Pura" },
     { label: "Tensão do Banco de Baterias", type: "text", placeholder: "24V" },
-    { label: "Tensão Máxima de Entrada (Placa Solar)", type: "text", placeholder: "80V" },
-    { label: "Potência Máxima de Entrada (Placa Solar)", type: "text", placeholder: "2000W" },
+    { label: "Tensão Máxima da Placa", type: "text", placeholder: "80V" },
+    { label: "Potência Máxima da Placa", type: "text", placeholder: "2000W" },
     { label: "Modo de Operação", type: "text", placeholder: "Off-grid / Híbrido / On-grid" },
     { label: "Vida Útil Estimada", type: "text", placeholder: "15 Anos" },
 ];

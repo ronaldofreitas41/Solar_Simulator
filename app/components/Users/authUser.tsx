@@ -10,7 +10,7 @@ const AuthUser = () => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const authenticator = auth;
+
 
     async function submit() {
         // Envio dos dados ao servidor para verificação
