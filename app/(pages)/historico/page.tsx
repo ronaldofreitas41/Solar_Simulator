@@ -13,7 +13,7 @@ export default function Home() {
   });
 
   async function getSimulaitionData() {
-    const res  = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/simulationData`);
+    const res  = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/simulationData`);//Buscar dados de simulação filtrando pelo usuário
 
     if (res.ok) {
       const data = await res.json();
