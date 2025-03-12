@@ -51,6 +51,7 @@ const BlueCard: React.FC<Props> = ({
     );
     if (res.ok) {
       console.log(`Simulation ${iden} deleted successfully`);
+      window.location.reload();
     } else {
       console.error(`Error deleting simulation ${iden}`);
     }
@@ -66,6 +67,7 @@ const BlueCard: React.FC<Props> = ({
     );
     if (res.ok) {
       console.log(`Simulation ${iden} updated successfully`);
+      window.location.reload();
     } else {
       console.error(`Error updating simulation ${iden}`);
     }

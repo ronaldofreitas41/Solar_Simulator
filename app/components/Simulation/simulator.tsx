@@ -25,7 +25,10 @@ const Simulator = () => {
     const [userData, setUserData] = useState([]);
     const [areau, setAreaU] = useState(0);
     const [creditos,setCreditosCarbono] = useState(0);
+    const [showPopup, setShowPopup] = useState(false);
+    const [simulationData, setSimulationData] = useState<SimulationData | null>(null);
 
+    
 
     //Adicionando a localizaçao inicial ao carregar a página
     useEffect(() => {
@@ -42,7 +45,14 @@ const Simulator = () => {
         if (storedUserData) {
             setUserData(JSON.parse(storedUserData));
         }
-    }, []);
+    }, []); 
+    
+    const handleSave = () => {
+        if (simulationData) {
+            saveSimulation(simulationData);
+            setShowPopup(false);
+        }
+    };
 
     //Mudando a localização conforme a mesma for pesquisada
     const handleLocationChange = (location: string) => {
@@ -186,6 +196,7 @@ const Simulator = () => {
                 payback: '3 Anos',//Num sei como calcular ainda
             }
             saveSimulation(simulationData);
+            setShowPopup(true);
         }
     }
 
@@ -433,3 +444,5 @@ const Simulator = () => {
 }
 
 export default Simulator;
+
+
