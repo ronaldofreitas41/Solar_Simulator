@@ -1,4 +1,3 @@
-
 import React from "react";
 import WhiteButton from "../Common/whiteButton";
 import YellowButton from "../Common/yellowButton";
@@ -17,8 +16,10 @@ type Props = {
   placas: String;
   cabos: String;
   inversores: String;
+  id: String;
   controladores: String;
   estruturas: String;
+  creditos?: String;
   payback: String;
 };
 
@@ -35,9 +36,41 @@ const BlueCard: React.FC<Props> = ({
   geracaoReal,
   inversores,
   payback,
+  id,
   predicao,
   placas,
+  creditos,
 }) => {
+  async function deleteSimulation(iden: String) {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL_API}/simulationData`,
+      {
+        method: "DELETE",
+        body: JSON.stringify({ "id": iden }),
+      }
+    );
+    if (res.ok) {
+      console.log(`Simulation ${iden} deleted successfully`);
+    } else {
+      console.error(`Error deleting simulation ${iden}`);
+    }
+  }
+
+  async function editSimulation(iden: String) {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL_API}/simulationData`,
+      {
+        method: "PUT",
+        body: JSON.stringify({ "id": iden }),
+      }
+    );
+    if (res.ok) {
+      console.log(`Simulation ${iden} updated successfully`);
+    } else {
+      console.error(`Error updating simulation ${iden}`);
+    }
+  }
+
   return (
     <div
       style={{
@@ -74,17 +107,32 @@ const BlueCard: React.FC<Props> = ({
       <Line id={"Cabos: "} text={cabos} />
       <Line id={"Inversor: "} text={inversores} />
       <Line id={"Controlador: "} text={controladores} />
+      <Line
+        id={"Redução de carbono por mês: "}
+        text={creditos ? creditos : "Undefined"}
+      />
       <Line id={"Estrutura: "} text={estruturas} />
 
       <div
         style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}
       >
         <div style={{ marginRight: "40px" }}>
-          <WhiteButton text="Editar" />
+          <WhiteButton
+            text="Editar"
+            onClick={() => editSimulation(id)}
+          />
         </div>
-        <YellowButton text="Excluir" />
+        <div
+          style={{marginLeft: "20px"}}
+        >
+          <YellowButton
+            text="Excluir"
+            onClick={() => deleteSimulation(id)}
+          />
+        </div>
       </div>
     </div>
   );
 };
+
 export default BlueCard;

@@ -1,5 +1,5 @@
 import { database } from "@/app/services/firebaseClient";
-import { child, get, push, ref, set } from "firebase/database";
+import { child, get, push, ref, remove, set, update } from "firebase/database";
 import { NextResponse, NextRequest } from "next/server";
  
 
@@ -31,6 +31,34 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ message: 'Data saved successfully!' }, { status: 200 });
     } catch (error:any) {
         console.error('Error saving data:', error.message);
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    }
+}
+
+export async function PUT(request: NextRequest) {
+    try {
+        const { id, ...data } = await request.json();
+        console.log('Data to update:', data);    
+        const simulacaoRef = ref(database, `Simulacoes/${id}`);
+        await update(simulacaoRef, data);
+
+        return NextResponse.json({ message: 'Data updated successfully!' }, { status: 200 });
+    } catch (error: any) {
+        console.error('Error updating data:', error.message);
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    }
+}
+
+export async function DELETE(request: NextRequest) {
+    try {
+        const { id } = await request.json();
+        console.log('Data to delete:', id);    
+        const simulacaoRef = ref(database, `Simulacoes/${id}`);
+        await remove(simulacaoRef);
+
+        return NextResponse.json({ message: 'Data deleted successfully!' }, { status: 200 });
+    } catch (error: any) {
+        console.error('Error deleting data:', error.message);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
