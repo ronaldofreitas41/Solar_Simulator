@@ -24,6 +24,7 @@ const Simulator = () => {
     const [estrutura, setEstrutura] = useState("");
     const [userData, setUserData] = useState([]);
     const [areau, setAreaU] = useState(0);
+    const [creditos,setCreditosCarbono] = useState(0);
 
 
     //Adicionando a localizaçao inicial ao carregar a página
@@ -102,6 +103,8 @@ const Simulator = () => {
                         let geracaoPlaca = potencia * irradiacaoMedia * eficiencia;
 
                         let geracaoPlacaMensal = geracaoPlaca * 30;
+                        const creditosCarbono  = 0.453*geracaoPlacaMensal;
+
 
                         let n = consumof / geracaoPlacaMensal;
                         n = Math.max(Math.ceil(n), 1);
@@ -111,6 +114,7 @@ const Simulator = () => {
 
                         //alert('Em um sistema composto por placas com potencial de ' + (potencia * 1000) + ' W em condições ideais com ' + (eficiencia * 100) + '% de aproveitamento da geração na sua localização é necessário: ' + n + "placas");
                         setCustoPlacas(bestPlatePrice * n);
+                        setCreditosCarbono(creditosCarbono);
                         return bestPlatePrice * n;
                     }
                 }
@@ -120,6 +124,16 @@ const Simulator = () => {
 
         return 0;
     }
+    /**
+     * Função para pegar a data atual formatada
+     */
+    const getFormattedDate = () => {
+        const today = new Date();
+        const day = String(today.getDate()).padStart(2, '0'); // Dia com dois dígitos
+        const month = String(today.getMonth() + 1).padStart(2, '0'); // Mês com dois dígitos (janeiro é 0)
+        const year = today.getFullYear(); // Ano com quatro dígitos
+        return `${day}/${month}/${year}`; // Retorna a data formatada
+    };
 
     /**
      * Função para calcular o preço final do sistema
@@ -156,7 +170,7 @@ const Simulator = () => {
             var simulationData = {
                 nomeSimulacao: 'Simulacao',//Falta colocar um Id concatenado
                 // userData: userData.cpf,//Falta buscar os dados do usuario
-                data: Date.now().toString(),//Esse ta ok
+                data: getFormattedDate,//Esse ta ok
                 areaNecessaria: areau+'m²',//OK
                 geracaoEstimada: geracao+"KW/dia",//OK
                 geracaoReal: '',//vai em branco que quem preenhe é o usuário
@@ -167,7 +181,8 @@ const Simulator = () => {
                 cabos: cabo,//OK 
                 inversores: inversor,//OK 
                 controladores: controlador,//OK 
-                estruturas: estrutura,//OK 
+                estruturas: estrutura,//OK
+                reducaoCarbono: creditos,//OK 
                 payback: '3 Anos',//Num sei como calcular ainda
             }
             saveSimulation(simulationData);
