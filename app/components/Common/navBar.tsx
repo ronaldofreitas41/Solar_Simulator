@@ -76,7 +76,6 @@ export const NavBar = () => {
                 <HeaderItem text="Suporte" href="/suporte" />
                 {userType === 'Consumidor' && <HeaderItem id="Simular" text="Simular" href="/simular" />}
                 {userType === 'Fornecedor' && <HeaderItem id="Cadastrar" text="Cadastrar" href="/cadastrar" />}
-                <HeaderItem text="Sobre Nós" href="/about" />
                 {!userType && <HeaderItem text="Login" href="/login" />}
                 {userType && <HeaderItem text="Logout" href="/login" />}
             </nav>
