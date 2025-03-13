@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         // Configurar o e-mail
         const mailOptions = {
-            from: process.env.GMAIL_USER,
+            from: name,
             to: process.env.GMAIL_USER, // Enviar para você mesmo
             subject: `Suporte: ${name}`,
             text: emailContent,

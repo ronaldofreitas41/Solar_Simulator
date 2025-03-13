@@ -9,7 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
+    "@emotion/react": "^11.14.0",
+    "@mui/icons-material": "^6.4.7",
+    "@mui/material": "^6.4.7",
     "@react-google-maps/api": "^2.20.5",
+    "@types/nodemailer": "^6.4.17",
     "cors": "^2.8.5",
     "firebase": "^11.0.2",
     "firebase-admin": "^13.0.1",

@@ -8,7 +8,7 @@ export const NavBar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false); // Estado para controlar a visibilidade do menu
 
     useEffect(() => {
-        console.log("useEffect executed");
+
         const data = localStorage.getItem('UserData');
         if (data) {
             const parsedData = JSON.parse(data);

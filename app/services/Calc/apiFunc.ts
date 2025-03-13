@@ -96,7 +96,7 @@ export async function getEstruturas() {
  * @param: opção selecionada
  * @return: Dados de irradiação
  */
-export async function getIrradiation(selectedOption: any) {
+export async function getIrradiation(selectedOption: any,lat:number,lon:number) {
     let option = '';
     switch (selectedOption) {
         case 'Doméstico':
@@ -114,7 +114,12 @@ export async function getIrradiation(selectedOption: any) {
     }
     const url = `${process.env.NEXT_PUBLIC_BASE_URL_API}/irradiation/${option}`;
     const res = await fetch(url, {
-        method: 'GET',
+        method: 'POST',
+        body: JSON.stringify({
+            LAT:lat,
+            LON:lon
+        })
+        
     });
 
     if (res.ok) {

@@ -5,7 +5,6 @@ import { NextResponse, NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
  
- 
     try {
         const dbRef = ref(database);
         const snapshot = await get(child(dbRef, 'Simulacoes'));

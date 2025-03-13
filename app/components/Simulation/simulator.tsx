@@ -21,18 +21,18 @@ const Simulator = () => {
   const [selectedOption, setSelectedOption] = useState("Doméstico");
   const [selectedOption2, setSelectedOption2] = useState("Consumo Médio");
   const [area, setArea] = useState("Área");
-  const [custoPlacas, setCustoPlacas] = useState(0);
-  const [geracao, setGeracao] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [placa, setPlaca] = useState("");
-  const [controlador, setControlador] = useState("");
-  const [inversor, setInversor] = useState("");
-  const [cabo, setCabo] = useState("");
-  const [estrutura, setEstrutura] = useState("");
   const [userData, setUserData] = useState([]);
-  const [areau, setAreaU] = useState(0);
-  const [creditos, setCreditosCarbono] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
+  let controlador:string;
+  let inversor:string;
+  let cabo:string;
+  let estrutura;
+  let placa:string;
+  let custoPlacas:number;
+  let areau:number;
+  let creditos:number;
+  let geracao:number;
   interface SimulationData {
     nomeSimulacao: string;
     data: string;
@@ -101,7 +101,6 @@ const Simulator = () => {
    * @return: Custo de placas solares no sistema
    */
   async function calculaGeracao() {
-    console.log("passei aqui")
     const coordenadas = getCoordenadas(); // OK testado
 
     let irradiation = await getIrradiation(
@@ -109,42 +108,43 @@ const Simulator = () => {
       coordenadas[0],
       coordenadas[1]
     );
-    console.log("irradiation", irradiation);
-
+    
     let consumof = parseFloat(consumo); // OK testado
     if (selectedOption2 == "Consumo Anual") {
       consumof = consumof / 12;
     }
 
-
-    let irradiationData: any = Object.values(irradiation.data); // OK testado
-
+    let irradiationData:any = Object.values(irradiation); // OK testado
     const bestPlate = await melhorCustoBeneficio() // OK testado
     const bestPlatePrice = parseFloat(bestPlate.preco); // OK testado
     const bestPlateArea = parseFloat(bestPlate.dimensoes.split("m")[0]);
-    setAreaU(bestPlateArea);
-
     console.log("Melhor placa em preco: ", bestPlatePrice);
-
-    let irradiacaoMedia = irradiationData[0].ANNUAL / 1000; // Irradiação média anual (kWh/m²/dia)
+    
+    let irradiacaoMedia = irradiationData[0] / 1000; // Irradiação média anual (kWh/m²/dia)
+    
     let potencia = parseFloat(bestPlate.potenciaNominal.split("W")[0]) / 1000; // Potência em KW
     let eficiencia =
-      1 - parseFloat(bestPlate.eficienciaDoPainel.split("%")[0]) / 100; // Eficiência em decimal
-
+    1 - parseFloat(bestPlate.eficienciaDoPainel.split("%")[0]) / 100; // Eficiência em decimal
+    
     let geracaoPlaca = potencia * irradiacaoMedia * eficiencia;
     let geracaoPlacaMensal = geracaoPlaca * 30;
-    const creditosCarbono = 0.453 * geracaoPlacaMensal;
-
+    const creditosCarbonoo = 0.453 * geracaoPlacaMensal;
+    
     let n = consumof / geracaoPlacaMensal;
     n = Math.max(Math.ceil(n), 1);
     const geracaoSistema = geracaoPlaca * n;
-
+    
     // Atualize o estado uma vez após todos os cálculos
-    setPlaca(n + " x " + bestPlate.nome);
-    setGeracao(geracaoSistema);
-    setCustoPlacas(bestPlatePrice * n);
-    setCreditosCarbono(creditosCarbono);
-
+    placa = n + " x " + bestPlate.nome;
+    geracao = geracaoSistema;
+    custoPlacas = bestPlatePrice * n;
+    areau = bestPlateArea*n;
+    creditos = creditosCarbonoo;
+    console.log("Placa", placa);
+    console.log("Creditos de carbono: ", creditos);
+    console.log("Geração do sistema: ", geracao);
+    console.log("Custo de placas: ", custoPlacas);
+    
     return bestPlatePrice * n;
   }
 
@@ -176,9 +176,9 @@ const Simulator = () => {
       setCabo("1 rolo do: " + caboo.nome);
       const estruturaa = await escolheEstrutura();
       setEstrutura("1 x " + estruturaa.nome);
-     await calculaGeracao();
-     
-     
+  
+      const res = await calculaGeracao(); // Aguarda a conclusão de calculaGeracao
+  
       precoFinal =
         parseFloat(controladorr.preco) +
         parseFloat(inversorr.preco) +
@@ -192,25 +192,25 @@ const Simulator = () => {
       const paybackk = (precoFinal / custoCemigg / 12).toFixed(2);
       setLoading(false);
       getSimulacoes(userData);
+  
       var simulation: SimulationData = {
-        nomeSimulacao: "Simulacao", //Falta colocar um Id concatenado
-        // userData: userData.cpf,//Falta buscar os dados do usuario
-        data: getFormattedDate(), //Esse ta ok
-        areaNecessaria: areau + "m²", //OK
-        geracaoEstimada: geracao + "KW/dia", //OK
-        geracaoReal: "", //vai em branco que quem preenhe é o usuário
-        predicao: "", //Calculada dividindo a geração real pela estimada então aqui vai em branco
-        custoEstimado: precoFinal, //OK
-        custoCemig: custoCemigg.toString(), //Não sei como fazer ele ainda
-        placas: placa, //OK
-        cabos: cabo, //OK
-        inversores: inversor, //OK
-        controladores: controlador, //OK
-        estruturas: estrutura, //OK
-        reducaoCarbono: creditos, //OK
-        payback: paybackk.toString() + "Anos", //Num sei como calcular ainda
+        nomeSimulacao: "Simulacao",
+        data: getFormattedDate(),
+        areaNecessaria: areau + "m²",
+        geracaoEstimada: geracao + "KW/dia",
+        geracaoReal: "",
+        predicao: "",
+        custoEstimado: precoFinal,
+        custoCemig: custoCemigg.toString(),
+        placas: placa,
+        cabos: cabo,
+        inversores: inversor,
+        controladores: controlador,
+        estruturas: estrutura,
+        reducaoCarbono: creditos,
+        payback: paybackk.toString() + "Anos",
       };
-
+  
       console.log(simulation);
       setSimulationData(simulation);
       saveSimulation(simulationData);
