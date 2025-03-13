@@ -1,10 +1,36 @@
+'use client';
+import BlueButton from "@/app/components/Common/blueButton";
+import Footer from "@/app/components/Common/footer";
 import { NavBar } from "@/app/components/Common/navBar";
 import YellowLine from "@/app/components/Common/yellowLine";
-import React from "react";
+import React, { useState } from "react";
 
-export default function page() {
+export default function Page() {
+    const [name, setName] = useState('');
+    const [emailContent, setEmailContent] = useState('');
+
+    async function enviar() {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/sender`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, emailContent }),
+            });
+
+            if (response.ok) {
+                alert('E-mail enviado com sucesso!');
+            } else {
+                alert('Erro ao enviar e-mail');
+            }
+        } catch (error) {
+            alert('Erro ao enviar e-mail');
+        }
+    }
+
     return (
-        <body>
+        <div>
             <NavBar />
             <YellowLine />
             <div
@@ -37,33 +63,43 @@ export default function page() {
                             fontFamily: 'Averia Serif Libre',
                             fontSize: '18px',
                         }}>
-                            Relate por auqi o seu problema, e entraremos em contato o mais rápido possível.
+                            Relate por aqui o seu problema, e entraremos em contato o mais rápido possível.
                         </p>
                         <div style={{ marginTop: '20px' }}>
                             <label style={{ display: 'block', marginBottom: '10px', color: '#000' }}>
                                 Nome:
-                                <input type="text" style={{
-                                    width: '100%',
-                                    padding: '10px',
-                                    marginTop: '5px',
-                                    border: '3px solid #083553'
-                                }} />
+                                <input
+                                    type="text"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    style={{
+                                        width: '100%',
+                                        padding: '10px',
+                                        marginTop: '5px',
+                                        border: '3px solid #083553'
+                                    }}
+                                />
                             </label>
                             <label style={{
                                 display: 'block',
                                 marginBottom: '10px',
                                 color: '#000'
-
                             }}>
                                 Conteúdo do E-mail:
-                                <textarea style={{
-                                    width: '100%',
-                                    padding: '10px',
-                                    marginTop: '5px',
-                                    border: '3px solid #083553'
-                                }} rows={5}></textarea>
+                                <textarea
+                                    value={emailContent}
+                                    onChange={(e) => setEmailContent(e.target.value)}
+                                    style={{
+                                        width: '100%',
+                                        padding: '10px',
+                                        marginTop: '5px',
+                                        border: '3px solid #083553'
+                                    }}
+                                    rows={5}
+                                ></textarea>
                             </label>
                         </div>
+                        <BlueButton text="Enviar" onClick={enviar} />
                     </div>
 
                     <img
@@ -75,9 +111,8 @@ export default function page() {
                             float: 'right'
                         }} />
                 </div>
+                <Footer />
             </div>
-        </body >
+        </div>
     );
-
-
 }

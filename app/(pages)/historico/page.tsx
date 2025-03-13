@@ -1,4 +1,5 @@
 "use client";
+import Footer from "@/app/components/Common/footer";
 import { NavBar } from "@/app/components/Common/navBar";
 import YellowLine from "@/app/components/Common/yellowLine";
 import BlueCard from "@/app/components/History/blueCard";
@@ -68,6 +69,7 @@ export default function Home() {
           backgroundColor: '#F5F5F5',
           padding: '20px',
           marginTop: '70px',
+          marginBottom: '20%',
           height: '90vh',
         }}
       >
@@ -94,6 +96,7 @@ export default function Home() {
             />
         ))}
       </div>
+      <Footer />
     </div>
   );
 }

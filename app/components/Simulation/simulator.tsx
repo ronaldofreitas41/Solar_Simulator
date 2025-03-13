@@ -7,6 +7,7 @@ import BlueButton from "../Common/blueButton";
 import Loading from "../Common/Loading";
 import { escolheCabo, escolheControlador, escolheEstrutura, escolheInversor, melhorCustoBeneficio } from "@/app/services/Calc/bestEquip";
 import { getIrradiation, getPlates } from "@/app/services/Calc/apiFunc";
+import SimulationPopup from "../Common/SimulationPopup";
 
 const Simulator = () => {
     const [localizacao, setLocalizacao] = useState('Localização');
@@ -24,13 +25,29 @@ const Simulator = () => {
     const [estrutura, setEstrutura] = useState("");
     const [userData, setUserData] = useState([]);
     const [areau, setAreaU] = useState(0);
-    const [creditos,setCreditosCarbono] = useState(0);
+    const [creditos, setCreditosCarbono] = useState(0);
     const [showPopup, setShowPopup] = useState(false);
+    interface SimulationData {
+        nomeSimulacao: string;
+        data: string;
+        areaNecessaria: string;
+        geracaoEstimada: string;
+        geracaoReal: string;
+        predicao: string;
+        custoEstimado: number;
+        custoCemig: string;
+        placas: string;
+        cabos: string;
+        inversores: string;
+        controladores: string;
+        estruturas: string;
+        reducaoCarbono: number;
+        payback: string;
+    }
+
     const [simulationData, setSimulationData] = useState<SimulationData | null>(null);
 
-    
-
-    //Adicionando a localizaçao inicial ao carregar a página
+    // Adicionando a localização inicial ao carregar a página
     useEffect(() => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
@@ -45,24 +62,17 @@ const Simulator = () => {
         if (storedUserData) {
             setUserData(JSON.parse(storedUserData));
         }
-    }, []); 
-    
-    const handleSave = () => {
-        if (simulationData) {
-            saveSimulation(simulationData);
-            setShowPopup(false);
-        }
-    };
+    }, []);
 
-    //Mudando a localização conforme a mesma for pesquisada
+    // Mudando a localização conforme a mesma for pesquisada
     const handleLocationChange = (location: string) => {
         setLocalizacao(location);
     };
 
     /*
-     *Função para pegar as coordenadas da localização
-     *@param: Nenhum
-     *@return: Coordenadas da localização
+     * Função para pegar as coordenadas da localização
+     * @param: Nenhum
+     * @return: Coordenadas da localização
     */
     function getCoordenadas() {
         let labelLoc: string[] = localizacao.split(":");
@@ -84,56 +94,51 @@ const Simulator = () => {
     async function calculaGeracao() {
         let plates = await getPlates();
         let irradiation = await getIrradiation(selectedOption);
-        let consumof = parseFloat(consumo);//OK testado
+        let consumof = parseFloat(consumo); // OK testado
         if (selectedOption2 == 'Consumo Anual') {
             consumof = consumof / 12;
         }
 
-        let plateData: any = Object.values(plates.data); //OK testado
-        let irradiationData: any = Object.values(irradiation.data); //OK testado
+        let plateData: any = Object.values(plates.data); // OK testado
+        let irradiationData: any = Object.values(irradiation.data); // OK testado
 
-        const coordenadas = getCoordenadas();//OK testado
-        const bestPlateIndex = melhorCustoBeneficio(plateData); //OK testado
-        const bestPlate = plateData[bestPlateIndex]; //OK testado
-        const bestPlatePrice = parseFloat(bestPlate.preco); //OK testado
-        const bestPlateArea = parseFloat(bestPlate.area.split("m²"));
+        const coordenadas = getCoordenadas(); // OK testado
+        const bestPlateIndex = melhorCustoBeneficio(plateData); // OK testado
+        const bestPlate = plateData[bestPlateIndex]; // OK testado
+        const bestPlatePrice = parseFloat(bestPlate.preco); // OK testado
+        const bestPlateArea = parseFloat(bestPlate.dimensoes.split("m")[0]);
         setAreaU(bestPlateArea);
 
         console.log("Melhor placa em preco: ", bestPlatePrice);
         if (Array.isArray(irradiationData)) {
-            irradiationData.forEach(e => {
-                if (Number(e.LAT.toFixed(1)) == coordenadas[0]) {
-                    if (Number(e.LON.toFixed(1)) == coordenadas[1]) {
+            for (const e of irradiationData) {
+                if (Number(e.LAT.toFixed(1)) === coordenadas[0] && Number(e.LON.toFixed(1)) === coordenadas[1]) {
+                    let irradiacaoMedia = e.ANNUAL / 1000; // Irradiação média anual (kWh/m²/dia)
+                    let potencia = parseFloat(bestPlate.potenciaNominal.split("W")[0]) / 1000; // Potência em KW
+                    let eficiencia = 1 - parseFloat(bestPlate.eficienciaDoPainel.split("%")[0]) / 100; // Eficiência em decimal
 
-                        let irradiacaoMedia = e.ANNUAL / 1000; // Irradiação média anual (kWh/m²/dia)
-                        let potencia = (parseFloat(bestPlate.potenciaNominal.split("W")[0])) / 1000; // Potência em KW
-                        let eficiencia = 1 - (parseFloat(bestPlate.eficienciaDoPainel.split("%")[0]) / 100); // Eficiência em decimal
+                    let geracaoPlaca = potencia * irradiacaoMedia * eficiencia;
+                    let geracaoPlacaMensal = geracaoPlaca * 30;
+                    const creditosCarbono = 0.453 * geracaoPlacaMensal;
 
-                        
-                        let geracaoPlaca = potencia * irradiacaoMedia * eficiencia;
+                    let n = consumof / geracaoPlacaMensal;
+                    n = Math.max(Math.ceil(n), 1);
+                    const geracaoSistema = geracaoPlaca * n;
 
-                        let geracaoPlacaMensal = geracaoPlaca * 30;
-                        const creditosCarbono  = 0.453*geracaoPlacaMensal;
+                    // Atualize o estado uma vez após todos os cálculos
+                    setPlaca(n + " x " + bestPlate.nome);
+                    setGeracao(geracaoSistema);
+                    setCustoPlacas(bestPlatePrice * n);
+                    setCreditosCarbono(creditosCarbono);
 
-
-                        let n = consumof / geracaoPlacaMensal;
-                        n = Math.max(Math.ceil(n), 1);
-                        setPlaca(n + " x " + bestPlate.nome);
-                        const geracaoSistema = geracaoPlaca * n;
-                        setGeracao(geracaoSistema);
-
-                        //alert('Em um sistema composto por placas com potencial de ' + (potencia * 1000) + ' W em condições ideais com ' + (eficiencia * 100) + '% de aproveitamento da geração na sua localização é necessário: ' + n + "placas");
-                        setCustoPlacas(bestPlatePrice * n);
-                        setCreditosCarbono(creditosCarbono);
-                        return bestPlatePrice * n;
-                    }
+                    return bestPlatePrice * n;
                 }
-            });
-
+            }
         }
 
         return 0;
     }
+
     /**
      * Função para pegar a data atual formatada
      */
@@ -155,46 +160,41 @@ const Simulator = () => {
         var precoFinal = 0;
         try {
             const controladorr = await escolheControlador(geracao);
-            setControlador(" x "+controladorr.nome);
+            setControlador("1 x " + controladorr.nome);
             const inversorr = await escolheInversor(geracao);
-            setInversor(" x "+inversorr.nome);
+            setInversor("1 x " + inversorr.nome);
             const caboo = await escolheCabo();
-            setCabo(" x "+caboo.nome);
+            setCabo("1 rolo do: " + caboo.nome);
             const estruturaa = await escolheEstrutura();
             setEstrutura("1 x " + estruturaa.nome);
             const res = await calculaGeracao();
-            
-            console.log("Placas: ", placa);
-            console.log("Controlador: ", controlador);
-            console.log("Inversor: ", inversor);
-            console.log("Cabo: ", cabo);
-            console.log("Estrutura: ", estrutura);
-
             precoFinal = parseFloat(controladorr.preco) + parseFloat(inversorr.preco) + parseFloat(caboo.preco) + parseFloat(estruturaa.preco) + custoPlacas;
-            alert("O preço final do sistema é: R$" + precoFinal);
         } catch (e: any) {
-            alert(e.message);
+            console.log(e);
         } finally {
+            const custoCemigg = parseFloat(consumo) * 0.75 + 15;
+            const paybackk = precoFinal / custoCemigg;
             setLoading(false);
             getSimulacoes(userData);
-            var simulationData = {
+            var simulation: SimulationData = {
                 nomeSimulacao: 'Simulacao',//Falta colocar um Id concatenado
                 // userData: userData.cpf,//Falta buscar os dados do usuario
-                data: getFormattedDate,//Esse ta ok
-                areaNecessaria: areau+'m²',//OK
-                geracaoEstimada: geracao+"KW/dia",//OK
+                data: getFormattedDate(),//Esse ta ok
+                areaNecessaria: areau + 'm²',//OK
+                geracaoEstimada: geracao + "KW/dia",//OK
                 geracaoReal: '',//vai em branco que quem preenhe é o usuário
                 predicao: '',//Calculada dividindo a geração real pela estimada então aqui vai em branco
                 custoEstimado: precoFinal,//OK
-                custoCemig: consumo,//Não sei como fazer ele ainda
+                custoCemig: custoCemigg,//Não sei como fazer ele ainda
                 placas: placa,//OK 
                 cabos: cabo,//OK 
                 inversores: inversor,//OK 
                 controladores: controlador,//OK 
                 estruturas: estrutura,//OK
                 reducaoCarbono: creditos,//OK 
-                payback: '3 Anos',//Num sei como calcular ainda
+                payback: paybackk,//Num sei como calcular ainda
             }
+            setSimulationData(simulation);
             saveSimulation(simulationData);
             setShowPopup(true);
         }
@@ -218,10 +218,11 @@ const Simulator = () => {
             console.log('Error fetching data');
         }
     }
+
     /**
      * Funçãoo para salvar os dados de Simulação
      * @param: SimulationData
-     * @return:	Nenhum
+     * @return: Nenhum
      */
     async function saveSimulation(simulationData: any) {
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/simulationData`, {
@@ -439,10 +440,14 @@ const Simulator = () => {
                 </div>
             </div>
             {loading && <Loading />}
+            {showPopup && simulationData && (
+                <SimulationPopup
+                    simulationData={simulationData}
+                    onClose={() => setShowPopup(false)}
+                />
+            )}
         </div>
     );
 }
 
 export default Simulator;
-
-
