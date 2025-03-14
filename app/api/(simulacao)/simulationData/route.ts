@@ -21,6 +21,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+    
     try {
         const data = await request.json();
         console.log('Data received:', data);    

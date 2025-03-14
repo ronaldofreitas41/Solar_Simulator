@@ -18,13 +18,15 @@ import { SimulationData } from "@/app/types/types";
 
 const Simulator = () => {
   const [localizacao, setLocalizacao] = useState("Localização");
-  const [consumo, setConsumo] = useState("Consumo");
+  const [consumo, setConsumo] = useState("");
   const [selectedOption, setSelectedOption] = useState("Doméstico");
   const [selectedOption2, setSelectedOption2] = useState("Consumo Médio");
-  const [area, setArea] = useState("Área");
+  const [area, setArea] = useState("");
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
+  const user = JSON.parse(sessionStorage.getItem("UserData") || "{}");
+  const cpf = user.document;
   let controlador:string;
   let inversor:string;
   let cabo:string;
@@ -34,7 +36,6 @@ const Simulator = () => {
   let areau:number;
   let creditos:string;
   let geracao:number;
-
   
 
   const [simulationData, setSimulationData] = useState<SimulationData | null>(
@@ -179,13 +180,12 @@ const Simulator = () => {
       const custoCemigg = parseFloat(consumo) * 0.75 + 15;
       const paybackk = (precoFinal / custoCemigg / 12).toFixed(2);
       setLoading(false);
-      getSimulacoes(userData);
   
       var simulation: SimulationData = {
         nomeSimulacao: "Simulacao",
         data: getFormattedDate(),
         areaNecessaria: areau + "m²",
-        geracaoEstimada: geracao + "KW/dia",
+        geracaoEstimada: (geracao.toFixed(2)) + "KW/dia",
         geracaoReal: "",
         predicao: "",
         custoEstimado: precoFinal.toString(),
@@ -197,7 +197,7 @@ const Simulator = () => {
         estruturas: estrutura,
         creditos: creditos,
         payback: paybackk.toString() + "Anos",
-        user: "",
+        user: cpf,
         id: ""
       };
   
@@ -205,30 +205,6 @@ const Simulator = () => {
       setSimulationData(simulation);
       saveSimulation(simulationData);
       setShowPopup(true);
-    }
-  }
-
-  /**
-   * Funcao usada para definir quantas simulacoes o usuario ja realizou(Tem que arrumnar aqui)
-   * @param:UserData
-   * @return:Quantidade de simulacoes de um usuario
-   */
-  async function getSimulacoes(userData: any) {
-    
-
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/simulationData/${userData.cpf}`,
-      {
-        method: "GET",
-      }
-    );
-
-    if (res.ok) {
-      const data = await res.json();
-      setUserData(data);
-      sessionStorage.setItem("UserData", JSON.stringify(data));
-    } else {
-      console.log("Error fetching data");
     }
   }
 
@@ -248,7 +224,7 @@ const Simulator = () => {
         body: JSON.stringify(simulationData),
       }
     );
-
+    console.log("Res Salva Placa: ",res);
     if (res.ok) {
       alert("Simulação salva com sucesso!");
     } else {
@@ -468,6 +444,7 @@ const Simulator = () => {
               fontFamily: "Averia Serif Libre",
               marginBottom: "20px",
             }}
+            placeholder="Consumo em KW"
             value={consumo}
             onChange={(e) => setConsumo(e.target.value)}
           />
@@ -482,8 +459,8 @@ const Simulator = () => {
               marginBottom: "10px",
             }}
           >
-            Área do terreno disponível (M²)
-          </p>
+            Área do terreno disponível 
+         </p>
 
           <input
             type="text"
@@ -499,6 +476,7 @@ const Simulator = () => {
               fontFamily: "Averia Serif Libre",
               marginBottom: "20px",
             }}
+            placeholder="Área em M²"
             value={area}
             onChange={(e) => setArea(e.target.value)}
           />
