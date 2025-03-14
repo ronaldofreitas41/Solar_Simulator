@@ -9,13 +9,13 @@ export const NavBar = () => {
 
     useEffect(() => {
 
-        const data = sessionStorage.getItem('UserData');
+        const data = typeof window !== "undefined" ? (window.localStorage.getItem('UserData') || '{}') : '{}';
         if (data) {
             const parsedData = JSON.parse(data);
             setUserData(parsedData);
             setUserType(parsedData.type);
         } else {
-            console.log("No user data found in sessionStorage");
+            console.log("No user data found in localStorage");
         }
     }, []);
 

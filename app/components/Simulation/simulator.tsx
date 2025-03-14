@@ -25,8 +25,8 @@ const Simulator = () => {
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
-  const user = JSON.parse(sessionStorage.getItem("UserData") || "{}");
-  const cpf = user.document;
+  const user = typeof window !== "undefined" ? (window.localStorage.getItem('UserData') || '{}') : '{}';
+  const cpf = JSON.parse(user).document;
   let controlador:string;
   let inversor:string;
   let cabo:string;
@@ -36,7 +36,6 @@ const Simulator = () => {
   let areau:number;
   let creditos:string;
   let geracao:number;
-  
 
   const [simulationData, setSimulationData] = useState<SimulationData | null>(
     null
@@ -51,12 +50,6 @@ const Simulator = () => {
       });
     } else {
       alert("Geolocalização não é suportada pelo seu navegador.");
-    }
-
-    const storedUserData = localStorage.getItem("UserData");
-
-    if (storedUserData) {
-      setUserData(JSON.parse(storedUserData));
     }
   }, []);
 
@@ -163,7 +156,7 @@ const Simulator = () => {
       cabo = ("1 rolo do: " + caboo.nome);
       const estruturaa = await escolheEstrutura();
       estrutura = ("1 x " + estruturaa.nome);
-      const userData = JSON.parse(sessionStorage.getItem("UserData") || "{}");
+      const userData = JSON.parse(typeof window !== "undefined" ? (window.localStorage.getItem('UserData') || '{}') : '{}');
       console.log('User Data',userData);
       
       const res = await calculaGeracao(); // Aguarda a conclusão de calculaGeracao
@@ -185,7 +178,7 @@ const Simulator = () => {
         nomeSimulacao: "Simulacao",
         data: getFormattedDate(),
         areaNecessaria: areau + "m²",
-        geracaoEstimada: (geracao.toFixed(2)) + "KW/dia",
+        geracaoEstimada: geracao + "KW/dia",
         geracaoReal: "",
         predicao: "",
         custoEstimado: precoFinal.toString(),
@@ -197,13 +190,12 @@ const Simulator = () => {
         estruturas: estrutura,
         creditos: creditos,
         payback: paybackk.toString() + "Anos",
-        user: cpf,
-        id: ""
+        user: cpf
       };
-  
-      console.log(simulation);
+
       setSimulationData(simulation);
-      saveSimulation(simulationData);
+
+      await saveSimulation(simulation);
       setShowPopup(true);
     }
   }
@@ -224,7 +216,7 @@ const Simulator = () => {
         body: JSON.stringify(simulationData),
       }
     );
-    console.log("Res Salva Placa: ",res);
+
     if (res.ok) {
       alert("Simulação salva com sucesso!");
     } else {
@@ -489,7 +481,7 @@ const Simulator = () => {
               marginTop: "20px",
             }}
           >
-            <BlueButton text="Enviar" onClick={calculaPreçoFinal} />
+            <BlueButton text="Enviar" onClick={async () => {await calculaPreçoFinal()}} />
           </div>
         </div>
 

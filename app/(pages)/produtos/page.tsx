@@ -30,7 +30,7 @@ export default function Home() {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/${url}`);
       if (res.ok) {
         const dat = await res.json();
-        const formattedData = Object.entries(dat.data).map(([id, data]) => (
+        const formattedData:any = Object.entries(dat.data).map(([id, data]) => (
           typeof data === 'object' && data !== null ? { id, ...data } : { id }
         ));
 

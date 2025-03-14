@@ -3,8 +3,27 @@ import Footer from "@/app/components/Common/footer";
 import { NavBar } from "@/app/components/Common/navBar";
 import YellowLine from "@/app/components/Common/yellowLine";
 import BlueCard from "@/app/components/History/blueCard";
-import { SimulationData } from "@/app/types/types";
 import React, { useEffect, useState } from "react";
+
+interface SimulationData {
+  nomeSimulacao: string;
+  user: string
+  data: string;
+  areaNecessaria: string;
+  geracaoEstimada: string;
+  geracaoReal: string;
+  predicao: string;
+  custoEstimado: string;
+  custoCemig: string;
+  placas: string;
+  cabos: string;
+  inversores: string;
+  id: string;
+  controladores: string;
+  estruturas: string;
+  payback: string;
+  creditos: string;
+}
 
 export default function Home() {
   const [historyData, setHistoryData] = useState<SimulationData[]>([]);

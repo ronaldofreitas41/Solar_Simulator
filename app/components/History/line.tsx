@@ -2,7 +2,7 @@ import React from "react";
 
 type Props = {
     id: String
-    text: String;
+    text: String | React.ReactNode;
 }
 
 const Line: React.FC<Props> = ({ id, text }) => {

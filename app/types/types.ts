@@ -11,7 +11,6 @@ export interface SimulationData {
     placas: string;
     cabos: string;
     inversores: string;
-    id: string;
     controladores: string;
     estruturas: string;
     payback: string;

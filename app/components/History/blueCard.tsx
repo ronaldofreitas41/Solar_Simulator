@@ -4,26 +4,26 @@ import YellowButton from "../Common/yellowButton";
 import Line from "./line";
 
 type Props = {
-  nomeSimulacao: String;
-  userData: String;
-  date: String;
-  areaNecessaria: String;
-  geracaoEstimada: String;
-  geracaoReal: String;
-  predicao: String;
-  custoEstimado: String;
-  custoCemig: String;
-  placas: String;
-  cabos: String;
-  inversores: String;
-  id: String;
-  controladores: String;
-  estruturas: String;
-  creditos?: String;
-  payback: String;
+  nomeSimulacao: string;
+  userData: string;
+  date: string;
+  areaNecessaria: string;
+  geracaoEstimada: string;
+  geracaoReal: string;
+  predicao: string;
+  custoEstimado: string;
+  custoCemig: string;
+  placas: string;
+  cabos: string;
+  inversores: string;
+  id: string;
+  controladores: string;
+  estruturas: string;
+  creditos?: string;
+  payback: string;
 };
 
-async function deleteItem(iden: String) {
+async function deleteItem(iden: string) {
   console.log("iden: ", iden);
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL_API}/simulationData`,
@@ -96,20 +96,23 @@ const BlueCard: React.FC<Props> = ({
     setRealGeneration(event.target.value);
   };
 
-  async function handleSaveClick(iden: String) {
-    const estimatedGeneration = parseFloat(geracaoEstimada);
-    const realGenerationValue = parseFloat(realGeneration);
-    const newPrediction = (realGenerationValue / estimatedGeneration).toFixed(2);
+  async function handleSaveClick(iden: string) {
+    const estimatedGeneration = parseFloat(geracaoEstimada.replace("KW/dia", "").trim());;
+    const realGenerationValue = realGeneration;
+
+    const newPrediction = (Number(realGenerationValue) / Number(estimatedGeneration)).toFixed(2);
   
     setPrediction(newPrediction); // Atualiza o estado da predição
-    console.log("Id: ", iden);
-    const res = await atualizarSimulacao(iden, realGenerationValue, parseFloat(newPrediction));
+
+    const res = await atualizarSimulacao(iden, parseFloat(realGenerationValue), parseFloat(newPrediction));
   
     if (res && res.ok) {
       console.log("Simulação atualizada com sucesso");
     } else {
       console.error("Erro ao atualizar a simulação");
     }
+
+    setIsEditing(!isEditing);
   }
   
 

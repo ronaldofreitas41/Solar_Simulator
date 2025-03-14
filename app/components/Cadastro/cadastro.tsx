@@ -15,8 +15,8 @@ export default function CadastroProdutos() {
     const [descricao, setDescricao] = useState('');
     const [quantidade, setQuantidade] = useState('');
     const [preco, setPreco] = useState('');
-    const userdata = JSON.parse(sessionStorage.getItem('UserData'));
-    const cnpj = userdata.document;
+    const userdata = typeof window !== "undefined" ? (window.localStorage.getItem('UserData') || '{}') : '{}';
+    const cnpj = JSON.parse(userdata).document;
     let url = '';
 
     // Estados específicos para cada tipo de equipamento
