@@ -66,8 +66,8 @@ export async function getCabos() {
     });
 
     if (res.ok) {
-        const cabosData = await res.json();
-        return cabosData;
+        const CabosData = await res.json();
+        return CabosData;
     } else {
         throw new Error('Sem Cabos cadastrados');
     }

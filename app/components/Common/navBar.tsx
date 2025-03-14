@@ -9,13 +9,11 @@ export const NavBar = () => {
 
     useEffect(() => {
 
-        const data = localStorage.getItem('UserData');
+        const data = sessionStorage.getItem('UserData');
         if (data) {
             const parsedData = JSON.parse(data);
             setUserData(parsedData);
             setUserType(parsedData.type);
-            console.log("User Type", parsedData.type);
-            console.log("User Data: ", parsedData);
         } else {
             console.log("No user data found in sessionStorage");
         }
@@ -72,10 +70,11 @@ export const NavBar = () => {
                 transition: 'all 0.3s ease'
             }}>
                 <HeaderItem text="Home" href="/" />
-                <HeaderItem text="Histórico" href="/historico" />
+                {userType === 'Consumidor' && <HeaderItem id="Historico" text="Historico" href="/historico" />}
+                {userType === 'Fornecedor' && <HeaderItem id="Produtos" text="Produtos" href="/produtos" />}
                 <HeaderItem text="Suporte" href="/suporte" />
                 {userType === 'Consumidor' && <HeaderItem id="Simular" text="Simular" href="/simular" />}
-                {userType === 'Fornecedor' && <HeaderItem id="Cadastrar" text="Cadastrar" href="/cadastrar" />}
+                {userType === 'Fornecedor' && <HeaderItem id="Cadastrar" text="Cadastrar" href="/cadastro" />}
                 {!userType && <HeaderItem text="Login" href="/login" />}
                 {userType && <HeaderItem text="Logout" href="/login" />}
             </nav>

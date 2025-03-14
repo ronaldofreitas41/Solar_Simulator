@@ -14,6 +14,7 @@ import {
 } from "@/app/services/Calc/bestEquip";
 import { getIrradiation, getPlates } from "@/app/services/Calc/apiFunc";
 import SimulationPopup from "../Common/SimulationPopup";
+import { SimulationData } from "@/app/types/types";
 
 const Simulator = () => {
   const [localizacao, setLocalizacao] = useState("Localização");
@@ -27,29 +28,14 @@ const Simulator = () => {
   let controlador:string;
   let inversor:string;
   let cabo:string;
-  let estrutura;
+  let estrutura: string;
   let placa:string;
   let custoPlacas:number;
   let areau:number;
-  let creditos:number;
+  let creditos:string;
   let geracao:number;
-  interface SimulationData {
-    nomeSimulacao: string;
-    data: string;
-    areaNecessaria: string;
-    geracaoEstimada: string;
-    geracaoReal: string;
-    predicao: string;
-    custoEstimado: number;
-    custoCemig: string;
-    placas: string;
-    cabos: string;
-    inversores: string;
-    controladores: string;
-    estruturas: string;
-    reducaoCarbono: number;
-    payback: string;
-  }
+
+  
 
   const [simulationData, setSimulationData] = useState<SimulationData | null>(
     null
@@ -139,7 +125,7 @@ const Simulator = () => {
     geracao = geracaoSistema;
     custoPlacas = bestPlatePrice * n;
     areau = bestPlateArea*n;
-    creditos = creditosCarbonoo;
+    creditos = (creditosCarbonoo.toFixed(2)).toString();
     console.log("Placa", placa);
     console.log("Creditos de carbono: ", creditos);
     console.log("Geração do sistema: ", geracao);
@@ -169,14 +155,16 @@ const Simulator = () => {
     var precoFinal = 0;
     try {
       const controladorr = await escolheControlador(geracao);
-      setControlador("1 x " + controladorr.nome);
+      controlador = ("1 x " + controladorr.nome);
       const inversorr = await escolheInversor(geracao);
-      setInversor("1 x " + inversorr.nome);
+      inversor = ("1 x " + inversorr.nome);
       const caboo = await escolheCabo();
-      setCabo("1 rolo do: " + caboo.nome);
+      cabo = ("1 rolo do: " + caboo.nome);
       const estruturaa = await escolheEstrutura();
-      setEstrutura("1 x " + estruturaa.nome);
-  
+      estrutura = ("1 x " + estruturaa.nome);
+      const userData = JSON.parse(sessionStorage.getItem("UserData") || "{}");
+      console.log('User Data',userData);
+      
       const res = await calculaGeracao(); // Aguarda a conclusão de calculaGeracao
   
       precoFinal =
@@ -200,15 +188,17 @@ const Simulator = () => {
         geracaoEstimada: geracao + "KW/dia",
         geracaoReal: "",
         predicao: "",
-        custoEstimado: precoFinal,
+        custoEstimado: precoFinal.toString(),
         custoCemig: custoCemigg.toString(),
         placas: placa,
         cabos: cabo,
         inversores: inversor,
         controladores: controlador,
         estruturas: estrutura,
-        reducaoCarbono: creditos,
+        creditos: creditos,
         payback: paybackk.toString() + "Anos",
+        user: "",
+        id: ""
       };
   
       console.log(simulation);
