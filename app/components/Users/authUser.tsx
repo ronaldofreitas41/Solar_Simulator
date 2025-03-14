@@ -28,7 +28,7 @@ const AuthUser = () => {
             alert('Usuário autenticado como correto')
             redirect(`${process.env.NEXT_PUBLIC_BASE_URL}`);
         } else {
-            throw new Error('Usuário não está presente na base de dados');
+            alert('Usuário não está presente na base de dados');
         }
     }
 
