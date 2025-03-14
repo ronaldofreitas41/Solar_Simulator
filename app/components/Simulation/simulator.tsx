@@ -173,7 +173,7 @@ const Simulator = () => {
       const custoCemigg = parseFloat(consumo) * 0.75 + 15;
       const paybackk = (precoFinal / custoCemigg / 12).toFixed(2);
       setLoading(false);
-  
+
       var simulation: SimulationData = {
         nomeSimulacao: "Simulacao",
         data: getFormattedDate(),
