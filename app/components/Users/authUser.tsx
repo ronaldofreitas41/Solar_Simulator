@@ -24,7 +24,7 @@ const AuthUser = () => {
 
         if (res.ok) {
             const data = await res.json();
-            localStorage.setItem('UserData', JSON.stringify(data));
+            sessionStorage.setItem('UserData', JSON.stringify(data));
             alert('Usuário autenticado como correto')
             redirect(`${process.env.NEXT_PUBLIC_BASE_URL}`);
         } else {

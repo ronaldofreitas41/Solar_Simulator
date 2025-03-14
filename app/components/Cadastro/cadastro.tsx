@@ -15,6 +15,8 @@ export default function CadastroProdutos() {
     const [descricao, setDescricao] = useState('');
     const [quantidade, setQuantidade] = useState('');
     const [preco, setPreco] = useState('');
+    const userdata = JSON.parse(sessionStorage.getItem('UserData'));
+    const cnpj = userdata.document;
     let url = '';
 
     // Estados específicos para cada tipo de equipamento
@@ -22,7 +24,7 @@ export default function CadastroProdutos() {
     const [inversorData, setInversorData] = useState({});
     const [structureData, setStructureData] = useState({});
     const [controllerData, setControllerData] = useState({});
-    const [plateData, setPlateData] = useState({});
+    const [plateData, setPlateData] = useState({}); 
 
     const categorias = [
         { value: 'Cabos', icon: <FaBolt size={24} style={{ color: '#000' }} /> },
@@ -39,6 +41,7 @@ export default function CadastroProdutos() {
             quantidade: quantidade,
             preco: preco,
             categoria: selectedCategoria,
+            cnpj: cnpj,
         };
         console.log("cableData: ", cableData);
         // Adicione os dados específicos de acordo com a categoria selecionada
@@ -65,16 +68,24 @@ export default function CadastroProdutos() {
                 break;
             default:
                 break;
+            
         }
 
         console.log("Body: ", JSON.stringify(body));
-        fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/${url}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/${url}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(body)
         });
+
+        if(res.ok) {
+            alert('Produto cadastrado com sucesso!');
+            window.location.reload();
+        } else {
+            alert('Erro ao cadastrar produto');
+        }
     }
 
     return (

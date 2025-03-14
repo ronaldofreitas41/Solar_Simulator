@@ -9,10 +9,11 @@ export const AddUser = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [cpf, setCPF] = useState("");
+  const [document, setDocument] = useState("");
   const [consumidor, setConsumidor] = useState(0);
   const [fornecedor, setFornecedor] = useState(0);
   const [userType, setUserType] = useState("");
+  const [isCNPJ, setIsCNPJ] = useState(false);
   const router = useRouter();
 
   const formatCPF = (value: string) => {
@@ -23,8 +24,18 @@ export const AddUser = () => {
       .replace(/(\d{3})(\d{1,2})$/, "$1-$2"); // Coloca um hífen entre o nono e o décimo dígitos
   };
 
-  const handleCPFChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCPF(formatCPF(event.target.value));
+  const formatCNPJ = (value: string) => {
+    return value
+      .replace(/\D/g, "") // Remove tudo que não é dígito
+      .replace(/(\d{2})(\d)/, "$1.$2") // Coloca um ponto entre o segundo e o terceiro dígitos
+      .replace(/(\d{3})(\d)/, "$1.$2") // Coloca um ponto entre o quinto e o sexto dígitos
+      .replace(/(\d{3})(\d)/, "$1/$2") // Coloca uma barra entre o oitavo e o nono dígitos
+      .replace(/(\d{4})(\d{1,2})$/, "$1-$2"); // Coloca um hífen entre o décimo terceiro e o décimo quarto dígitos
+  };
+
+  const handleDocumentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setDocument(isCNPJ ? formatCNPJ(value) : formatCPF(value));
   };
 
   async function save() {
@@ -33,12 +44,11 @@ export const AddUser = () => {
       body: JSON.stringify({
         name: name,
         email: email,
-        cpf: cpf,
+        document: document,
         password: password,
         type: userType,
       }),
     });
-    // event?.preventDefault()
     if (res.ok) {
       alert("Usuário cadastrado com sucesso");
       router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/login`);
@@ -52,10 +62,12 @@ export const AddUser = () => {
       setConsumidor(1);
       setFornecedor(0);
       setUserType("Consumidor");
+      setIsCNPJ(false);
     } else {
       setConsumidor(0);
       setFornecedor(1);
       setUserType("Fornecedor");
+      setIsCNPJ(true);
     }
   }
 
@@ -66,6 +78,7 @@ export const AddUser = () => {
   function mudaLogin() {
     router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/login`);
   }
+
   return (
     <div
       style={{
@@ -155,9 +168,9 @@ export const AddUser = () => {
             />
             <input
               type="text"
-              placeholder="CPF"
-              value={cpf}
-              maxLength={14}
+              placeholder={isCNPJ ? "CNPJ" : "CPF"}
+              value={document}
+              maxLength={isCNPJ ? 18 : 14}
               style={{
                 padding: "10px",
                 marginBottom: "10px",
@@ -165,7 +178,7 @@ export const AddUser = () => {
                 borderRadius: "4px",
                 color: "#000",
               }}
-              onChange={handleCPFChange}
+              onChange={handleDocumentChange}
             />
             <input
               type="text"

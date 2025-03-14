@@ -1,4 +1,4 @@
-import { getCabos, getControladores, getEstruturas, getInversores } from "./apiFunc";
+import { getCabos, getControladores, getEstruturas, getInversores, getPlates } from "./apiFunc";
 
 /**
 * Função para Calcular custo beneficio das placas
@@ -7,7 +7,11 @@ import { getCabos, getControladores, getEstruturas, getInversores } from "./apiF
 * 
 */
 
-export function melhorCustoBeneficio(plateData: any) {
+export async function melhorCustoBeneficio() {
+    let plates = await getPlates();
+    console.log(`plates`, plates)
+    let plateData: any = Object.values(plates.data); // OK testado
+
     let max = Number.MAX_VALUE;
     let bestIndex = -1;
 
@@ -26,7 +30,7 @@ export function melhorCustoBeneficio(plateData: any) {
         console.error('plateData is not an array');
     }
 
-    return bestIndex;
+    return plateData[bestIndex];
 }
 
 /**

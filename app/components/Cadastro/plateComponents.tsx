@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 const solarPanelFields = [
     { label: "Potência Nominal", type: "text", placeholder: "450W" },
     { label: "Eficiência do Painel", type: "text", placeholder: "21.5%" },
-    { label: "Tensão de Operação (Vmp)", type: "text", placeholder: "38V" },
-    { label: "Corrente de Operação (Imp)", type: "text", placeholder: "11.8A" },
+    { label: "Tensão de Operação", type: "text", placeholder: "38V" },
+    { label: "Corrente de Operação", type: "text", placeholder: "11.8A" },
     { label: "Tipo de Célula", type: "text", placeholder: "Monocristalino" },
     { label: "Dimensões", type: "text", placeholder: "3m²" },
     { label: "Peso", type: "text", placeholder: "25kg" },
