@@ -82,7 +82,7 @@ const BlueCard: React.FC<Props> = ({
           <Line id="Resistência ao Vento: " text={data.resistenciaVento} />
           <Line id="Vida Útil: " text={data.vidaUtil} />
           <Line id="Peso: " text={data.peso} />
-          <Line id="Tipo Fixação: " text={data.tipoFixacao} />
+          <Line id="Tipo Fixação: " text={data.tipoDeFixacao} />
           <Line id="Capacidade de Painéis:" text={data.capacidadePaineis} />
         </div>
       )}
@@ -91,12 +91,12 @@ const BlueCard: React.FC<Props> = ({
         <div>
           <Line id="Corrente de Operação: " text={data.correnteOperacao} />
           <Line id="Dimensões: " text={data.dimensoes} />
-          <Line id="Eficiência: " text={data.eficiencia} />
+          <Line id="Eficiência: " text={data.eficienciaDoPainel} />
           <Line id="Garantia: " text={data.garantia} />
           <Line id="Peso: " text={data.peso} />
           <Line id="Potência Nominal: " text={data.potenciaNominal} />
-          <Line id="Tensão de Operação: " text={data.tensaoOperacao} />
-          <Line id="Tipo de Célula: " text={data.tipoCelula} />
+          <Line id="Tensão de Operação: " text={data.tensaoDeOperacao} />
+          <Line id="Tipo de Célula: " text={data.tipoDeCelula} />
         </div>
       )}
 
@@ -106,33 +106,32 @@ const BlueCard: React.FC<Props> = ({
           <Line id="Blindagem: " text={data.blindagem} />
           <Line id="Comprimento do Rolo/Pacote: " text={data.comprimentoRoloPacote} />
           <Line id="Cor da Capa Externa: " text={data.corDaCapaExterna} />
-          <Line id="Resistência ao Óleo: " text={data.resistenciaOleo} />
         </div>
       )}
 
       {type === 'inversores' && (
 
         <div>
-          <Line id="Vida Útil: " text={data.vidaUtil} />
-          <Line id="Modo de Operação: " text={data.modoOperacao} />
-          <Line id="Tensão de Saída: " text={data.tensaoSaida} />
-          <Line id="Tensão da Bateria: " text={data.tensaoBateria} />
-          <Line id="Tipo de Onda: " text={data.tipoOnda} />
-          <Line id="Potência Nominal: " text={data.potenciaNominal} />
-          <Line id="Potência Máxima Placas: " text={data.potenciaMaximaPlacas} />
-          <Line id="Tensão Máxima Placas: " text={data.tensaoMaximaPlacas} />
+          <Line id="Vida Útil: " text={data.vidaUtilEstimada} />
+          <Line id="Modo de Operação: " text={data.modoDeOperacao} />
+          <Line id="Tensão de Saída: " text={data.tensaoDeSaida} />
+          <Line id="Tensão da Bateria: " text={data.tensaoDoBancoDeBaterias} />
+          <Line id="Tipo de Onda: " text={data.tipoDeOnda} />
+          <Line id="Potência Nominal: " text={data.potenciaDeSaidaNominal} />
+          <Line id="Potência Máxima Placas: " text={data.potenciaMaximaDaPlaca} />
+          <Line id="Tensão Máxima Placas: " text={data.tensaoMaximaDaPlaca} />
         </div>
       )
       }
       {
         type === 'controlador' && (
           <div>
-            <Line id="Capacidade Máxima Placas: " text={data.capacidadeMaxP} />
+            <Line id="Capacidade Máxima Placas: " text={data.capacidadeMaximaDePaineis} />
             <Line id="Corrente Nominal: " text={data.correnteNominal} />
-            <Line id="Eficiência: " text={data.eficiencia} />
-            <Line id="Tensão de Operação: " text={data.tensaoOperacao} />
-            <Line id="Tensão Máxima Entrada: " text={data.tensaoMaxEntrada} />
-            <Line id="Tipo: " text={data.tipo} />
+            <Line id="Eficiência: " text={data.eficienciaMaxima} />
+            <Line id="Tensão de Operação: " text={data.tensaoDeTrabalho} />
+            <Line id="Tensão Máxima Entrada: " text={data.tensaoMaximaDeEntrada} />
+            <Line id="Tipo: " text={data.tipoDeControlador} />
           </div>
         )
       }
@@ -143,14 +142,14 @@ const BlueCard: React.FC<Props> = ({
       <div
         style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}
       >
-        <div style={{ marginRight: "40px" }}>
+        {/* <div style={{ marginRight: "40px" }}>
           <WhiteButton
             text="Editar"
             onClick={() => editSimulation(data.id)}
           />
-        </div>
+        </div> */}
         <div
-          style={{ marginLeft: "20px" }}
+          // style={{ marginLeft: "20px" }}
         >
           <YellowButton
             text="Excluir"

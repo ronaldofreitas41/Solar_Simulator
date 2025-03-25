@@ -30,14 +30,13 @@ export default function Home() {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/${url}`);
       if (res.ok) {
         const dat = await res.json();
-        const formattedData:any = Object.entries(dat.data).map(([id, data]) => (
+        const formattedData: any = Object.entries(dat.data).map(([id, data]) => (
           typeof data === 'object' && data !== null ? { id, ...data } : { id }
         ));
 
         switch (url) {
           case 'estrutura':
             setEstruturas(formattedData as StructureData[]);
-            console.log("estruturas", estruturas);
             break;
           case 'plates':
             setPlacas(formattedData as PlateData[]);
@@ -78,26 +77,26 @@ export default function Home() {
         );
       case 'plates':
         return placas.map((item, index) =>
-           <BlueCard
+          <BlueCard
             key={index}
             data={item}
             type={selectedCategory}
             nome={item.nome}
             descricao={item.descricao}
             quantidade={item.quantidade}
-            preco={item.preco}/>
-           );
+            preco={item.preco} />
+        );
       case 'cabos':
-        return cabos.map((item, index) => 
-        <BlueCard
-          key={index}
-          data={item}
-          type={selectedCategory}
-          nome={item.nome}
-          descricao={item.descricao}
-          quantidade={item.quantidade}
-          preco={item.preco}/>
-      );
+        return cabos.map((item, index) =>
+          <BlueCard
+            key={index}
+            data={item}
+            type={selectedCategory}
+            nome={item.nome}
+            descricao={item.descricao}
+            quantidade={item.quantidade}
+            preco={item.preco} />
+        );
       case 'inversores':
         return inversores.map((item, index) =>
           <BlueCard
@@ -107,7 +106,7 @@ export default function Home() {
             nome={item.nome}
             descricao={item.descricao}
             quantidade={item.quantidade}
-            preco={item.preco}/>
+            preco={item.preco} />
         );
       case 'controlador':
         return controladores.map((item, index) =>
@@ -118,7 +117,7 @@ export default function Home() {
             nome={item.nome}
             descricao={item.descricao}
             quantidade={item.quantidade}
-            preco={item.preco}/>
+            preco={item.preco} />
         );
       default:
         return null;
@@ -174,7 +173,7 @@ export default function Home() {
       >
         {renderCategory()}
       </div>
-      
+
     </div>
   );
 }
