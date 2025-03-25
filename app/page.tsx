@@ -33,17 +33,17 @@ export default function Home() {
 
       {/* Features Section */}
       <div style={{ display: 'flex', justifyContent: 'space-around', padding: '50px 10%', backgroundColor: '#0D3048', color: 'white', borderRadius: '0 0 100px 100px', flexWrap: 'wrap', position: 'relative', zIndex: 2 }}>
-        <div style={{ textAlign: 'center', maxWidth: '300px', margin: '20px', flex: '1 1 300px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', maxWidth: '300px', margin: '20px', flex: '1 1 300px' }}>
           <FaCalculator style={{ width: '80px', height: '80px', marginBottom: '20px' }} />
           <h3>Simulações Precisas</h3>
           <p>Utilize algoritmos avançados para prever sua geração de energia solar.</p>
         </div>
-        <div style={{ textAlign: 'center', maxWidth: '300px', margin: '20px', flex: '1 1 300px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', maxWidth: '300px', margin: '20px', flex: '1 1 300px' }}>
           <FaHistory style={{ width: '80px', height: '80px', marginBottom: '20px' }} />
           <h3>Otimização Inteligente</h3>
           <p>Melhore o posicionamento dos seus painéis solares para máxima eficiência.</p>
         </div>
-        <div style={{ textAlign: 'center', maxWidth: '300px', margin: '20px', flex: '1 1 300px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', maxWidth: '300px', margin: '20px', flex: '1 1 300px' }}>
           <BiStats style={{ width: '80px', height: '80px', marginBottom: '20px' }} />
           <h3>Economia Garantida</h3>
           <p>Analise o retorno do seu investimento com relatórios detalhados.</p>
