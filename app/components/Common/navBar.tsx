@@ -23,6 +23,13 @@ export const NavBar = () => {
         setIsMenuOpen(!isMenuOpen); // Alterna entre abrir e fechar o menu
     };
 
+    function limpa() {
+        if (typeof window !== "undefined") {
+            window.localStorage.clear();
+            console.log("LocalStorage limpo com sucesso.");
+        }
+    }
+
     return (
         <div style={{
             backgroundColor: '#0D3048',
@@ -76,7 +83,7 @@ export const NavBar = () => {
                 {userType === 'Consumidor' && <HeaderItem id="Simular" text="Simular" href="/simular" />}
                 {userType === 'Fornecedor' && <HeaderItem id="Cadastrar" text="Cadastrar" href="/cadastro" />}
                 {!userType && <HeaderItem text="Login" href="/login" />}
-                {userType && <HeaderItem text="Logout" href="/login" />}
+                {userType && <HeaderItem text="Logout" href="/login" onClick={limpa} />}
             </nav>
 
             {/* Estilos responsivos com media queries */}

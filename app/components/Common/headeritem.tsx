@@ -7,6 +7,7 @@ interface Props {
     display?: string;
     text: string;
     href: string;
+    onClick?: () => void;
 }
 
 export const HeaderItem: React.FC<Props> = ({ text, href, display, id }) => {

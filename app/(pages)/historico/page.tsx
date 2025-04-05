@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 
 interface SimulationData {
   nomeSimulacao: string;
-  user: string
+  user: string;
   data: string;
   areaNecessaria: string;
   geracaoEstimada: string;
@@ -25,36 +25,52 @@ interface SimulationData {
   creditos: string;
 }
 
-export default function Home() {
+export default function History() {
   const [historyData, setHistoryData] = useState<SimulationData[]>([]);
+  const user = typeof window !== "undefined" ? (window.localStorage.getItem("UserData") || "{}") : "{}";
+  const cpf = JSON.parse(user).document;
+  const body = {
+    user: cpf,
+  };
 
   useEffect(() => {
     getSimulationData();
   }, []);
 
   useEffect(() => {
-    console.log('historyData', historyData);
+    console.log("historyData", historyData);
   }, [historyData]);
-
 
   async function getSimulationData() {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/simulationData`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/simulationData`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // body: JSON.stringify(body),
+      });
+
       if (res.ok) {
         const simulationData = await res.json();
         console.log("simulationData", simulationData.data);
-        const formattedData = Object.entries(simulationData.data).map(([id, data]) => (typeof data === 'object' && data !== null ? { id, ...data } : { id }));
-        console.log("formattedData", formattedData);
-        if (Array.isArray(formattedData)) {
-          setHistoryData(formattedData as SimulationData[]); // Certifique-se de que a resposta está no formato correto
+        if (!simulationData.data) {
+          console.log("No data found");
+          return;
         } else {
-          console.error("Data fetched is not an array", formattedData);
+          const formattedData = Object.entries(simulationData.data).map(([id, data]) =>
+            typeof data === "object" && data !== null ? { id, ...data } : { id }
+          );
+          console.log("formattedData", formattedData);
+          if (Array.isArray(formattedData)) {
+            setHistoryData(formattedData as SimulationData[]);
+          } else {
+            console.error("Data fetched is not an array", formattedData);
+          }
         }
-      } else {
-        console.log("Error fetching data");
       }
     } catch (error) {
-      console.error("Error fetching data", error);
+      console.log("Error fetching data", error);
     }
   }
 
@@ -64,18 +80,19 @@ export default function Home() {
       <YellowLine />
       <div
         style={{
-          display: 'flex',
-          justifyContent: 'center',
-          flexWrap: 'wrap',
-          backgroundColor: '#F5F5F5',
-          padding: '20px',
-          marginTop: '70px',
-          marginBottom: '20%',
-          height: '90vh',
+          display: "flex",
+          justifyContent: "center",
+          flexWrap: "wrap",
+          backgroundColor: "#F5F5F5",
+          padding: "20px",
+          marginTop: "70px",
+          marginBottom: "20%",
+          height: "90vh",
         }}
       >
-        {Array.isArray(historyData) && historyData.map((item: SimulationData, index) => (
-              <BlueCard
+        {historyData.length > 0 ? (
+          historyData.map((item: SimulationData, index) => (
+            <BlueCard
               key={index}
               nomeSimulacao={item.nomeSimulacao}
               userData={item.user}
@@ -95,9 +112,13 @@ export default function Home() {
               creditos={item.creditos}
               payback={item.payback}
             />
-        ))}
+          ))
+        ) : (
+          <p style={{ textAlign: "center", fontSize: "18px", color: "#555" }}>
+            Nenhuma simulação realizada até o momento.
+          </p>
+        )}
       </div>
-      
     </div>
   );
 }

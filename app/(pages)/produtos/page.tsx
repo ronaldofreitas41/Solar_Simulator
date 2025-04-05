@@ -19,15 +19,26 @@ export default function Home() {
   const [cabos, setCabos] = useState<CabosData[]>([]);
   const [inversores, setInversores] = useState<InverterData[]>([]);
   const [controladores, setControladores] = useState<ControllerData[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('plates');
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const user = typeof window !== "undefined" ? (window.localStorage.getItem("UserData") || "{}") : "{}";
+  const cnpj = JSON.parse(user).document;
 
+console.log("body: ", JSON.stringify({ cnpj: cnpj }));
   useEffect(() => {
     getSimulationData(selectedCategory.toLowerCase());
   }, [selectedCategory]);
 
   async function getSimulationData(url: string) {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/${url}`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/${url}`
+        , {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          // body: JSON.stringify({ cnpj: cnpj }),
+        }
+      );
       if (res.ok) {
         const dat = await res.json();
         const formattedData: any = Object.entries(dat.data).map(([id, data]) => (
@@ -64,60 +75,101 @@ export default function Home() {
   const renderCategory = () => {
     switch (selectedCategory) {
       case 'estrutura':
-        return estruturas.map((item, index) =>
-          <BlueCard
-            key={index}
-            data={item}
-            type={selectedCategory}
-            nome={item.nome}
-            descricao={item.descricao}
-            quantidade={item.quantidade}
-            preco={item.preco}
-          />
+
+        return (
+          estruturas.length === 0 ? (
+            <p style={{ textAlign: "center", fontSize: "18px", color: "#555" }}>
+              Nenhuma estrutura cadastrada até o momento.
+            </p>
+          ) : (
+            estruturas.map((item, index) =>
+              <BlueCard
+                key={index}
+                data={item}
+                type={selectedCategory}
+                nome={item.nome}
+                descricao={item.descricao}
+                quantidade={item.quantidade}
+                preco={item.preco}
+              />
+            )
+          )
         );
       case 'plates':
-        return placas.map((item, index) =>
-          <BlueCard
-            key={index}
-            data={item}
-            type={selectedCategory}
-            nome={item.nome}
-            descricao={item.descricao}
-            quantidade={item.quantidade}
-            preco={item.preco} />
+        return (
+          placas.length === 0 ? (
+            <p style={{ textAlign: "center", fontSize: "18px", color: "#555" }}>
+              Nenhuma placa cadastrada até o momento.
+            </p>
+          ) : (
+            placas.map((item, index) =>
+              <BlueCard
+                key={index}
+                data={item}
+                type={selectedCategory}
+                nome={item.nome}
+                descricao={item.descricao}
+                quantidade={item.quantidade}
+                preco={item.preco} />
+            )
+          )
         );
       case 'cabos':
-        return cabos.map((item, index) =>
-          <BlueCard
-            key={index}
-            data={item}
-            type={selectedCategory}
-            nome={item.nome}
-            descricao={item.descricao}
-            quantidade={item.quantidade}
-            preco={item.preco} />
+        return (
+          estruturas.length === 0 ? (
+            <p style={{ textAlign: "center", fontSize: "18px", color: "#555" }}>
+              Nenhuma cabo cadastrado até o momento.
+            </p>
+          ) : (
+            cabos.map((item, index) =>
+              <BlueCard
+                key={index}
+                data={item}
+                type={selectedCategory}
+                nome={item.nome}
+                descricao={item.descricao}
+                quantidade={item.quantidade}
+                preco={item.preco} />
+            )
+          )
         );
       case 'inversores':
-        return inversores.map((item, index) =>
-          <BlueCard
-            key={index}
-            data={item}
-            type={selectedCategory}
-            nome={item.nome}
-            descricao={item.descricao}
-            quantidade={item.quantidade}
-            preco={item.preco} />
+        return (
+          estruturas.length === 0 ? (
+            <p style={{ textAlign: "center", fontSize: "18px", color: "#555" }}>
+              Nenhum inversor cadastrado até o momento.
+            </p>
+          ) : (
+            inversores.map((item, index) =>
+              <BlueCard
+                key={index}
+                data={item}
+                type={selectedCategory}
+                nome={item.nome}
+                descricao={item.descricao}
+                quantidade={item.quantidade}
+                preco={item.preco} />
+            )
+          )
         );
       case 'controlador':
-        return controladores.map((item, index) =>
-          <BlueCard
-            key={index}
-            data={item}
-            type={selectedCategory}
-            nome={item.nome}
-            descricao={item.descricao}
-            quantidade={item.quantidade}
-            preco={item.preco} />
+        return (
+          estruturas.length === 0 ? (
+            <p style={{ textAlign: "center", fontSize: "18px", color: "#555" }}>
+              Nenhum controlador cadastrado até o momento.
+            </p>
+          ) : (
+            controladores.map((item, index) =>
+              <BlueCard
+                key={index}
+                data={item}
+                type={selectedCategory}
+                nome={item.nome}
+                descricao={item.descricao}
+                quantidade={item.quantidade}
+                preco={item.preco} />
+            )
+          )
         );
       default:
         return null;

@@ -119,12 +119,7 @@ const Simulator = () => {
     geracao = geracaoSistema;
     custoPlacas = bestPlatePrice * n;
     areau = bestPlateArea*n;
-    creditos = (creditosCarbonoo.toFixed(2)).toString();
-    console.log("Placa", placa);
-    console.log("Creditos de carbono: ", creditos);
-    console.log("Geração do sistema: ", geracao);
-    console.log("Custo de placas: ", custoPlacas);
-    
+    creditos = (creditosCarbonoo.toFixed(2)).toString();   
     return bestPlatePrice * n;
   }
 
@@ -493,12 +488,12 @@ const Simulator = () => {
         </div>
       </div>
       {loading && <Loading />}
-      {showPopup && simulationData && (
+      {/* {showPopup && simulationData && (
         <SimulationPopup
           simulationData={simulationData}
           onClose={() => setShowPopup(false)}
         />
-      )}
+      )} */}
     </div>
   );
 };

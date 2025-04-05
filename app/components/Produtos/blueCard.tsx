@@ -36,21 +36,21 @@ const BlueCard: React.FC<Props> = ({
     }
   }
 
-  async function editSimulation(iden: String) {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL_API}/simulationData`,
-      {
-        method: "PUT",
-        body: JSON.stringify({ "id": iden }),
-      }
-    );
-    if (res.ok) {
-      console.log(`Simulation ${iden} updated successfully`);
-      window.location.reload();
-    } else {
-      console.error(`Error updating simulation ${iden}`);
-    }
-  }
+  // async function editSimulation(iden: String) {
+  //   const res = await fetch(
+  //     `${process.env.NEXT_PUBLIC_BASE_URL_API}/simulationData`,
+  //     {
+  //       method: "PUT",
+  //       body: JSON.stringify({ "id": iden }),
+  //     }
+  //   );
+  //   if (res.ok) {
+  //     console.log(`Simulation ${iden} updated successfully`);
+  //     window.location.reload();
+  //   } else {
+  //     console.error(`Error updating simulation ${iden}`);
+  //   }
+  // }
 
   return (
     <div
