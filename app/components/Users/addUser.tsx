@@ -90,31 +90,10 @@ export const AddUser = () => {
       }}
     >
       {/* Container Principal */}
-      <div
-        style={{
-          display: "flex",
-          width: "80%",
-          maxWidth: "900px",
-          height: "80%",
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-          borderRadius: "8px",
-          overflow: "hidden",
-        }}
-      >
+      <div className="auth-container">
         {/* Lado esquerdo (Azul) */}
-        <div
-          style={{
-            display: "flex",
-            flex: 1,
-            background: "#004C80",
-            justifyContent: "center",
-            alignItems: "center",
-            color: "#FFF",
-            flexDirection: "column",
-            padding: "20px",
-          }}
-        >
-          <img src="/images/logo.png" alt="Logo" />
+        <div className="left-side">
+          <img src="/images/logo.png" alt="Logo" style={{maxWidth:"325px"}} />
           <h2 style={{ marginTop: "20px", textAlign: "center" }}>
             Criar uma conta
           </h2>
@@ -125,17 +104,7 @@ export const AddUser = () => {
         </div>
 
         {/* Lado direito (Formulário) */}
-        <div
-          style={{
-            display: "flex",
-            flex: 1,
-            background: "#FFFFFF",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "column",
-            padding: "20px",
-          }}
-        >
+        <div className="right-side">
           <a
             style={{
               marginBottom: "20px",
@@ -238,6 +207,62 @@ export const AddUser = () => {
           </form>
         </div>
       </div>
+      <style jsx>{`
+                .auth-container {
+                    display: flex;
+                    flex-direction: column;
+                    width: 90%;
+                    max-width: 900px;
+                    height: auto;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                    border-radius: 8px;
+                    overflow: hidden;
+                }
+
+                .left-side {
+                        display: flex;
+                        flex: 1;
+                        background: #004c80;
+                        justify-content: center;
+                        align-items: center;
+                        color: #fff;
+                        flex-direction: column;
+                        padding: 20px;
+                }
+
+                .right-side {
+                    display: flex;
+                    flex: 1;
+                    background: #ffffff;
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: column;
+                    padding: 20px;
+                }
+
+                @media (min-width: 800px) {
+                    .auth-container {
+                        flex-direction: row;
+                        height: 80%;
+                    }
+
+                    .left-side {
+                        display: flex;
+                        flex: 1;
+                        background: #004c80;
+                        justify-content: center;
+                        align-items: center;
+                        color: #fff;
+                        flex-direction: column;
+                        padding: 20px;
+                    }
+
+                    .right-side {
+                        flex: 1;
+                        padding: 40px;
+                    }
+                }
+            `}</style>
     </div>
   );
 };
