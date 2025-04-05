@@ -6,16 +6,26 @@ interface Props {
     id?: string;
     display?: string;
     text: string;
-    href: string;
+    href?: string;
     onClick?: () => void;
 }
 
 export const HeaderItem: React.FC<Props> = ({ text, href, display, id }) => {
     const router = useRouter();
 
+    function limpa() {
+        if (typeof window !== "undefined") {
+            window.localStorage.clear();
+            console.log("LocalStorage limpo com sucesso.");
+        }
+    }
+
     function handleClick(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
         event.preventDefault();
-        router.push(href);
+        limpa();
+        if (href) {
+            router.push(href);
+        }
     }
 
     return (

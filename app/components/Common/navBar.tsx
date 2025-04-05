@@ -5,10 +5,9 @@ import HeaderItem from './headeritem';
 export const NavBar = () => {
     const [userData, setUserData] = useState(null);
     const [userType, setUserType] = useState('');
-    const [isMenuOpen, setIsMenuOpen] = useState(false); // Estado para controlar a visibilidade do menu
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     useEffect(() => {
-
         const data = typeof window !== "undefined" ? (window.localStorage.getItem('UserData') || '{}') : '{}';
         if (data) {
             const parsedData = JSON.parse(data);
@@ -20,15 +19,10 @@ export const NavBar = () => {
     }, []);
 
     const toggleMenu = () => {
-        setIsMenuOpen(!isMenuOpen); // Alterna entre abrir e fechar o menu
+        setIsMenuOpen(prev => !prev);
     };
 
-    function limpa() {
-        if (typeof window !== "undefined") {
-            window.localStorage.clear();
-            console.log("LocalStorage limpo com sucesso.");
-        }
-    }
+
 
     return (
         <div style={{
@@ -44,20 +38,18 @@ export const NavBar = () => {
             height: '70px',
             zIndex: 50
         }}>
-            {/* Logo */}
             <img
                 src="/images/logo.png"
                 alt="Logo"
                 style={{
-                    width: '300px', // Tamanho fixo para o logo
-                    maxWidth: '70%', // Limita o tamanho máximo
+                    width: '300px',
+                    maxWidth: '70%',
                 }}
             />
 
-            {/* Menu de Hambúrguer para telas pequenas */}
-            <div 
-                style={{ 
-                    display: 'none', // Oculta o ícone em telas maiores
+            <div
+                style={{
+                    display: 'flex',
                     cursor: 'pointer',
                     flexDirection: 'column',
                     gap: '5px'
@@ -69,13 +61,7 @@ export const NavBar = () => {
                 <div style={{ width: '25px', height: '3px', backgroundColor: 'white' }}></div>
             </div>
 
-            {/* Menu Principal */}
-            <nav style={{
-                display: 'flex',
-                gap: '25px',
-                alignItems: 'center',
-                transition: 'all 0.3s ease'
-            }}>
+            <nav className={isMenuOpen ? 'menu aberto' : 'menu fechado'}>
                 <HeaderItem text="Home" href="/" />
                 {userType === 'Consumidor' && <HeaderItem id="Historico" text="Historico" href="/historico" />}
                 {userType === 'Fornecedor' && <HeaderItem id="Produtos" text="Produtos" href="/produtos" />}
@@ -83,18 +69,23 @@ export const NavBar = () => {
                 {userType === 'Consumidor' && <HeaderItem id="Simular" text="Simular" href="/simular" />}
                 {userType === 'Fornecedor' && <HeaderItem id="Cadastrar" text="Cadastrar" href="/cadastro" />}
                 {!userType && <HeaderItem text="Login" href="/login" />}
-                {userType && <HeaderItem text="Logout" href="/login" onClick={limpa} />}
+                {userType &&
+                    <HeaderItem
+                        href='/login'
+                        text="Logout"
+                        onClick={() => {
+                        }
+                        } />
+                }
             </nav>
 
-            {/* Estilos responsivos com media queries */}
             <style jsx>{`
-                @media (max-width: 768px) {
-                    /* Oculta o menu principal em telas pequenas */
+                @media (max-width: 1000px) {
                     nav {
                         display: ${isMenuOpen ? 'flex' : 'none'};
                         flex-direction: column;
                         position: absolute;
-                        top: 70px; /* Alinha abaixo da NavBar */
+                        top: 70px;
                         left: 0;
                         width: 100%;
                         background-color: #0D3048;
@@ -103,21 +94,18 @@ export const NavBar = () => {
                         box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
                     }
 
-                    /* Exibe o ícone de hambúrguer em telas pequenas */
                     div > div {
-                        display: flex;
+                        display: block;
                     }
                 }
 
-                @media (min-width: 769px) {
-                    /* Oculta o ícone de hambúrguer em telas maiores */
+                @media (min-width: 1000px) {
                     div > div {
                         display: none;
                     }
 
-                    /* Garante que o menu principal seja exibido horizontalmente */
                     nav {
-                        display: flex;
+                        display: flex !important;
                         flex-direction: row;
                     }
                 }
