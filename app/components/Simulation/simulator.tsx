@@ -83,6 +83,8 @@ const Simulator = () => {
   async function calculaGeracao() {
     const coordenadas = getCoordenadas(); // OK testado
 
+    console.log("Coordenadas: ",coordenadas)
+
     let irradiation = await getIrradiation(
       selectedOption,
       coordenadas[0],
@@ -189,7 +191,7 @@ const Simulator = () => {
       };
 
       setSimulationData(simulation);
-
+      console.log(simulation);
       await saveSimulation(simulation);
       setShowPopup(true);
     }
@@ -488,12 +490,12 @@ const Simulator = () => {
         </div>
       </div>
       {loading && <Loading />}
-      {/* {showPopup && simulationData && (
+      {showPopup && simulationData && (
         <SimulationPopup
           simulationData={simulationData}
           onClose={() => setShowPopup(false)}
         />
-      )} */}
+      )}
     </div>
   );
 };

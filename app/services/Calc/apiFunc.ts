@@ -123,6 +123,7 @@ export async function getIrradiation(selectedOption: any,lat:number,lon:number) 
     });
 
     if (res.ok) {
+        console.log("Chegou aqui!")
         const irradiationData = await res.json();
         return irradiationData;
     } else {

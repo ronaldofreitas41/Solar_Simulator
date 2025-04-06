@@ -22,6 +22,9 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const user = typeof window !== "undefined" ? (window.localStorage.getItem("UserData") || "{}") : "{}";
   const cnpj = JSON.parse(user).document;
+  const body = {
+    cnpj: cnpj,
+  };
 
 console.log("body: ", JSON.stringify({ cnpj: cnpj }));
   useEffect(() => {
@@ -30,13 +33,13 @@ console.log("body: ", JSON.stringify({ cnpj: cnpj }));
 
   async function getSimulationData(url: string) {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/${url}`
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/${url}list`
         , {
-          method: "GET",
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          // body: JSON.stringify({ cnpj: cnpj }),
+          body: JSON.stringify(body),
         }
       );
       if (res.ok) {

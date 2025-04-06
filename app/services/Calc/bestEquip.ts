@@ -17,13 +17,15 @@ export async function melhorCustoBeneficio() {
 
     if (Array.isArray(plateData)) {
         plateData.forEach((e, index) => {
-            let potenciaNominalf = parseFloat(e.potenciaNominal.split("W")[0]);
-            let eficienciaf = parseFloat(e.eficienciaDoPainel.split("%")[0]) / 100;
-            let potenciaUtil = potenciaNominalf * eficienciaf;
-            let cb = parseFloat(e.preco) / potenciaUtil;
-            if (cb < max) {
-                max = cb;
-                bestIndex = index
+            if (e.potenciaNominal !== undefined && e.eficienciaDoPainel != undefined && e.preco != undefined) {
+                let potenciaNominalf = parseFloat(e.potenciaNominal.split("W")[0]);
+                let eficienciaf = parseFloat(e.eficienciaDoPainel.split("%")[0]) / 100;
+                let potenciaUtil = potenciaNominalf * eficienciaf;
+                let cb = parseFloat(e.preco) / potenciaUtil;
+                if (cb < max) {
+                    max = cb;
+                    bestIndex = index
+                }
             }
         });
     } else {
@@ -48,29 +50,33 @@ export async function escolheControlador(geracao: any) {
     var cb = 0;
 
     controladores.forEach((e: any, i: any) => {
-        var capacidadef = parseFloat(e.capacidadeMaximaDePaineis);
-        var capacidade = capacidadef * (parseFloat(e.eficienciaMaxima) / 100);
 
-        if (capacidade > geracao) {
-            console.log("if");
-            quant = 1;
-            custo = parseFloat(e.preco);
-            cb = custo / capacidade
-            console.log("Quantidade de controladores: ", quant);
-        } else {
-            console.log("else");
-            quant = capacidade / geracao;
-            quant = Math.max(Math.ceil(quant), 1);
-            custo = (quant * parseFloat(e.preco));
-            cb = custo / capacidade;
-            console.log("Quantidade de controladores: ", quant);
+        if (e.capacidadeMaximaDePaineis !== undefined && e.eficienciaMaxima !== undefined && e.preco !== undefined) {
+
+            var capacidadef = parseFloat(e.capacidadeMaximaDePaineis);
+            var capacidade = capacidadef * (parseFloat(e.eficienciaMaxima) / 100);
+
+            if (capacidade > geracao) {
+                console.log("if");
+                quant = 1;
+                custo = parseFloat(e.preco);
+                cb = custo / capacidade
+                console.log("Quantidade de controladores: ", quant);
+            } else {
+                console.log("else");
+                quant = capacidade / geracao;
+                quant = Math.max(Math.ceil(quant), 1);
+                custo = (quant * parseFloat(e.preco));
+                cb = custo / capacidade;
+                console.log("Quantidade de controladores: ", quant);
+            }
+
+            if (cb < min) {
+                min = cb;
+                index = i;
+            }
+
         }
-
-        if (cb < min) {
-            min = cb;
-            index = i;
-        }
-
     });
 
     return controladores[index];
@@ -93,32 +99,32 @@ export async function escolheInversor(geracao: any) {
     var cbvu = 0;
 
     inversores.forEach((e: any, i: any) => {
+        if (e.potenciaMaximaDaPlaca !== undefined && e.preco !== undefined && e.vidaUtilEstimada !== undefined) {
+            var potencia = (parseFloat(e.potenciaMaximaDaPlaca.split("W")[0]));
+            var vidaUtil = parseFloat((e.vidaUtilEstimada.split("anos")[0]).split(" ")[0]);
+            cbvu = parseFloat(e.preco) / vidaUtil;
+            if (potencia > geracao) {
+                console.log("if");
+                quant = 1;
+                custo = parseFloat(e.preco);
+                cb = custo / potencia
+                cb = cb + cbvu;
+                console.log("Quantidade de inversores: ", quant);
+            } else {
+                console.log("else");
+                quant = potencia / geracao;
+                quant = Math.max(Math.ceil(quant), 1);
+                custo = (quant * parseFloat(e.preco));
+                cb = custo / potencia;
+                cb = cb + cbvu;
+                console.log("Quantidade de inversores: ", quant);
+            }
 
-        var potencia = (parseFloat(e.potenciaMaximaDaPlaca.split("W")[0]));
-        var vidaUtil = parseFloat((e.vidaUtilEstimada.split("anos")[0]).split(" ")[0]);
-        cbvu = parseFloat(e.preco) / vidaUtil;
-        if (potencia > geracao) {
-            console.log("if");
-            quant = 1;
-            custo = parseFloat(e.preco);
-            cb = custo / potencia
-            cb = cb + cbvu;
-            console.log("Quantidade de inversores: ", quant);
-        } else {
-            console.log("else");
-            quant = potencia / geracao;
-            quant = Math.max(Math.ceil(quant), 1);
-            custo = (quant * parseFloat(e.preco));
-            cb = custo / potencia;
-            cb = cb + cbvu;
-            console.log("Quantidade de inversores: ", quant);
+            if (cb < min) {
+                min = cb;
+                index = i;
+            }
         }
-
-        if (cb < min) {
-            min = cb;
-            index = i;
-        }
-
     });
 
     return inversores[index];
@@ -138,15 +144,17 @@ export async function escolheCabo() {
     var index = 0;
 
     cabos.forEach((e: any, i: any) => {
-        var preco = parseFloat(e.preco);
-        var comprimento = parseFloat(e.comprimentoDoRoloPacote.split("m")[0]);
-        cb = preco / comprimento;
-
-        if (cb < min) {
-            min = cb;
-            index = i;
+        if (e.comprimentoDoRoloPacote === undefined || e.preco === undefined) {
+            
+            var preco = parseFloat(e.preco);
+            var comprimento = parseFloat(e.comprimentoDoRoloPacote.split("m")[0]);
+            cb = preco / comprimento;
+            
+            if (cb < min) {
+                min = cb;
+                index = i;
+            }    
         }
-
     });
 
     return cabos[index];
@@ -166,15 +174,18 @@ export async function escolheEstrutura() {
     var index = 0;
 
     estruturas.forEach((e: any, i: any) => {
-        var preco = parseFloat(e.preco);
-        var vd = parseFloat(e.peso);
-        cb = preco / vd;
 
-        if (cb < min) {
-            min = cb;
-            index = i;
-        }
-
+        if (e.peso === undefined || e.preco === undefined) {
+            
+            var preco = parseFloat(e.preco);
+            var vd = parseFloat(e.peso);
+            cb = preco / vd;
+            
+            if (cb < min) {
+                min = cb;
+                index = i;
+            }
+        }    
     });
 
     return estruturas[index];
