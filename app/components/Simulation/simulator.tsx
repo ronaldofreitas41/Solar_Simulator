@@ -110,7 +110,7 @@ const Simulator = () => {
     
     let geracaoPlaca = potencia * irradiacaoMedia * eficiencia;
     let geracaoPlacaMensal = geracaoPlaca * 30;
-    const creditosCarbonoo = 0.453 * geracaoPlacaMensal;
+    const creditosCarbonoo = 0.8 * geracaoPlacaMensal;
     
     let n = consumof / geracaoPlacaMensal;
     n = Math.max(Math.ceil(n), 1);
@@ -121,6 +121,8 @@ const Simulator = () => {
     geracao = geracaoSistema;
     custoPlacas = bestPlatePrice * n;
     areau = bestPlateArea*n;
+
+    console.log("Carbono"+creditosCarbonoo);
     creditos = (creditosCarbonoo.toFixed(2)).toString();   
     return bestPlatePrice * n;
   }
@@ -175,7 +177,7 @@ const Simulator = () => {
         nomeSimulacao: "Simulacao",
         data: getFormattedDate(),
         areaNecessaria: areau + "m²",
-        geracaoEstimada: geracao + "KW/dia",
+        geracaoEstimada: (geracao.toFixed(2)) + "KW/dia",
         geracaoReal: "",
         predicao: "",
         custoEstimado: precoFinal.toString(),
@@ -185,13 +187,12 @@ const Simulator = () => {
         inversores: inversor,
         controladores: controlador,
         estruturas: estrutura,
-        creditos: creditos,
+        creditos: creditos +"KG de CO2",
         payback: paybackk.toString() + "Anos",
         user: cpf
       };
 
       setSimulationData(simulation);
-      console.log(simulation);
       await saveSimulation(simulation);
       setShowPopup(true);
     }

@@ -22,7 +22,9 @@ export const HeaderItem: React.FC<Props> = ({ text, href, display, id }) => {
 
     function handleClick(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
         event.preventDefault();
-        limpa();
+        if (href === '/logout') { 
+            limpa();
+        }
         if (href) {
             router.push(href);
         }
