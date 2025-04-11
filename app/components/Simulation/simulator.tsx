@@ -185,9 +185,9 @@ const Simulator = () => {
         placas: placa,
         cabos: cabo,
         inversores: inversor,
-        controladores: controlador,
+        // controladores: controlador,
         estruturas: estrutura,
-        creditos: creditos +"KG de CO2",
+        creditos: creditos +"Kg de CO2",
         payback: paybackk.toString() + "Anos",
         user: cpf
       };

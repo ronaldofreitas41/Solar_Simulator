@@ -17,7 +17,7 @@ type Props = {
   cabos: string;
   inversores: string;
   id: string;
-  controladores: string;
+  controladores?: string;
   estruturas: string;
   creditos?: string;
   payback: string;
@@ -71,7 +71,7 @@ const BlueCard: React.FC<Props> = ({
   nomeSimulacao,
   areaNecessaria,
   cabos,
-  controladores,
+  // controladores,
   custoCemig,
   custoEstimado,
   estruturas,
@@ -170,7 +170,6 @@ const BlueCard: React.FC<Props> = ({
       <Line id={"Placas: "} text={placas} />
       <Line id={"Cabos: "} text={cabos} />
       <Line id={"Inversor: "} text={inversores} />
-      <Line id={"Controlador: "} text={controladores} />
       <Line
         id={"Redução de carbono por mês: "}
         text={creditos ? creditos : "Undefined"}
