@@ -46,7 +46,7 @@ const SimulationPopup: React.FC<SimulationPopupProps> = ({ simulationData, onClo
                 <p><strong>Placas:</strong> {simulationData.placas}</p>
                 <p><strong>Cabos:</strong> {simulationData.cabos}</p>
                 <p><strong>Inversores:</strong> {simulationData.inversores}</p>
-                <p><strong>Controladores:</strong> {simulationData.controladores}</p>
+                {/* <p><strong>Controladores:</strong> {simulationData.controladores}</p> */}
                 <p><strong>Estruturas:</strong> {simulationData.estruturas}</p>
                 <p><strong>Redução de Carbono:</strong> {simulationData.creditos}</p>
                 <p><strong>Payback Estimulado:</strong> {simulationData.payback}</p>

@@ -39,12 +39,14 @@ export default function History() {
 
   useEffect(() => {
     console.log("historyData", historyData);
+    console.log("body", body);
+    getSimulationData();
   }, [historyData]);
 
   async function getSimulationData() {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/simulationData`, {
-        method: "GET",
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/history`, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -53,7 +55,6 @@ export default function History() {
 
       if (res.ok) {
         const simulationData = await res.json();
-        console.log("simulationData", simulationData.data);
         if (!simulationData.data) {
           console.log("No data found");
           return;

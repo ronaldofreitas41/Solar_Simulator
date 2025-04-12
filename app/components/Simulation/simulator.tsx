@@ -176,8 +176,8 @@ const Simulator = () => {
       var simulation: SimulationData = {
         nomeSimulacao: "Simulacao",
         data: getFormattedDate(),
-        areaNecessaria: areau + "m²",
-        geracaoEstimada: (geracao.toFixed(2)) + "KW/dia",
+        areaNecessaria: areau + " m²",
+        geracaoEstimada: (geracao.toFixed(2)) + " KW/dia",
         geracaoReal: "",
         predicao: "",
         custoEstimado: precoFinal.toString(),
@@ -187,8 +187,8 @@ const Simulator = () => {
         inversores: inversor,
         // controladores: controlador,
         estruturas: estrutura,
-        creditos: creditos +"Kg de CO2",
-        payback: paybackk.toString() + "Anos",
+        creditos: creditos +" Kg de CO2",
+        payback: paybackk.toString() + " Anos",
         user: cpf
       };
 

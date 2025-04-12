@@ -18,9 +18,9 @@ export async function POST(request: NextRequest) {
             // Traz os usuários do banco para realizar a comparação
             const itens = snapshot.val();
             console.log(user);
+            console.log("Itens ",itens.user);
             const item = Object.values(itens).filter(
-                (item: any) => item.user === user
-                
+                (item: any) => item.user == user
             );
 
             if (item) {
